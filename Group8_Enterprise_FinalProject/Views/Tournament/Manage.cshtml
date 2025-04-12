@@ -1,0 +1,74 @@
+﻿@model TournamentViewModel
+
+@{
+	ViewData["Title"] = "Manage tournament";
+
+	var games = Model.ActiveTournament.Games ?? new List<Game>();
+
+	var notPlayedCount = games.Count(i => i.Result == "0-0");
+	var playedCount = games.Count(i => i.Result != "0-0");
+}
+
+<h2>Manage your party</h2>
+
+<a asp-controller="Tournament" asp-action="GetAllTournaments">All tournaments</a>
+<span class="px-2">|</span>
+<a asp-controller="Tournament" asp-action="GetEditForm" asp-route-id="@Model.ActiveTournament.TournamentId">Edit this tournament</a>
+<span class="px-2">|</span>
+<a asp-controller="Tournament" asp-action="GetDeleteForm" asp-route-id="@Model.ActiveTournament.TournamentId">Delete this tournament</a>
+<span class="px-2">|</span>
+<a asp-controller="Tournament" asp-action="GetCreateForm">Create new tournament</a>
+
+<hr />
+
+<h4>Tournament Summary:</h4>
+<p>
+	The "@Model.ActiveTournament.Game" tournament "@Model.ActiveTournament.Name"
+	@(Model.ActiveTournament.StartDateTime > DateTime.Now ? "starts on" : "started on")
+	@Model.ActiveTournament.StartDateTime.ToString("G")
+</p>
+<p>
+	Unfinished Matches: @notPlayedCount | Finished Matches: @playedCount
+</p>
+
+<h4>Games:</h4>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Team 1</th>
+			<th>Team 2</th>
+			<th>Date & Time</th>
+			<th>Result</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var game in games)
+		{
+			<tr>
+				<td>@game.Teams.First().Name</td>
+				<td>@game.Teams.Last().Name</td>
+				<td>@game.GameDateTime</td>
+				<td>
+					@if (game.Result == "0-0")
+					{
+						<span class="text-danger">Not played</span>
+					}
+					else
+					{
+						<span>@game.Result</span>
+					}
+				</td>
+				<td>
+					<a asp-controller="Game" asp-action="GetManageForm" asp-route-id="@game.GameId">Manage</a>
+					<span class="px-2">|</span>
+					<a asp-controller="Game" asp-action="GetEditForm" asp-route-id="@game.GameId">Edit</a>
+					<span class="px-2">|</span>
+					<a asp-controller="Game" asp-action="GetDeleteForm" asp-route-id="@game.GameId">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<a asp-controller="Game" asp-action="GetCreateForm">Add new game to this tournament</a>

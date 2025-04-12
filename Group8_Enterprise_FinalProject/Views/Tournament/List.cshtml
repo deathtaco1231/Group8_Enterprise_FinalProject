@@ -1,0 +1,41 @@
+﻿@model List<Tournament>
+
+@{
+    ViewData["Title"] = "All tournaments";
+}
+
+<p>
+    <a asp-controller="Tournament" asp-action="GetCreateForm">Create new tournament</a>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Game</th>
+                <th>Players/Team</th>
+                <th>Start Date & Time</th>
+                <th>Number of Games</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Tournament tournament in Model)
+            {
+                <tr>
+                    <td>@tournament.Name</td>
+                    <td>@tournament.Game</td>
+                    <td>@tournament.NumPlayersPerTeam</td>
+                    <td>@tournament.StartDateTime</td>
+                    <td>@tournament.NumGames</td>
+					<td>
+                        <a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@tournament.TournamentId">Manage</a>
+                        <span class="px-2">|</span>
+                        <a asp-controller="Tournament" asp-action="GetEditForm" asp-route-id="@tournament.TournamentId">Edit</a>
+                        <span class="px-2">|</span>
+                        <a asp-controller="Tournament" asp-action="GetDeleteForm" asp-route-id="@tournament.TournamentId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</p>

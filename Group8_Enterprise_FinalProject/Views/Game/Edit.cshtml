@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit tournament";
 }
 
-<form asp-controller="Organizer" asp-action="HandleEditRequest" asp-route-id="@Model.ActiveTournament.TournamentId" method="post" enctype="application/x-www-form-urlencoded">
+<form asp-controller="Tournament" asp-action="HandleEditRequest" asp-route-id="@Model.ActiveTournament.TournamentId" method="post" enctype="application/x-www-form-urlencoded">
     <div class="text-danger" asp-validation-summary="All"></div>
 
     <div class="form-group">

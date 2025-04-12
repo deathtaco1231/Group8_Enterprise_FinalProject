@@ -26,6 +26,12 @@ namespace Group8_Enterprise_FinalProject.Entities
         //Teams list (size must be exactly 2)
         [Required(ErrorMessage = "Please add the teams")]
         [MinLength(2, ErrorMessage = "There must be exactly 2 teams")]
+        [MaxLength(2, ErrorMessage = "There must be exactly 2 teams")]
         public ICollection<Team> Teams { get; } = new List<Team>();
+
+        public bool AreTeamsDistinct()
+        {
+            return Teams.Count == 2 && Teams.ElementAt(0).TeamId != Teams.ElementAt(1).TeamId;
+        }
     }
 }

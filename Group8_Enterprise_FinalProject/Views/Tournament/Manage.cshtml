@@ -9,7 +9,7 @@
 	var playedCount = games.Count(i => i.Result != "0-0");
 }
 
-<h2>Manage your party</h2>
+<h2>Manage your tournament</h2>
 
 <a asp-controller="Tournament" asp-action="GetAllTournaments">All tournaments</a>
 <span class="px-2">|</span>
@@ -71,4 +71,4 @@
 	</tbody>
 </table>
 
-<a asp-controller="Game" asp-action="GetCreateForm">Add new game to this tournament</a>
+<a asp-controller="Game" asp-action="GetCreateForm" asp-route-id="@Model.ActiveTournament.TournamentId">Add new game to this tournament</a>

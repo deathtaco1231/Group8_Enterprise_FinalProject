@@ -1,39 +1,41 @@
-﻿@model TournamentViewModel
+﻿@model GameViewModel
 
 @{
-    ViewData["Title"] = "Edit tournament";
+    ViewData["Title"] = "Edit game";
 }
 
-<form asp-controller="Tournament" asp-action="HandleEditRequest" asp-route-id="@Model.ActiveTournament.TournamentId" method="post" enctype="application/x-www-form-urlencoded">
+<form asp-controller="Game" asp-action="HandleEditRequest" asp-route-id="@Model.ActiveGame.GameId" method="post" enctype="application/x-www-form-urlencoded">
     <div class="text-danger" asp-validation-summary="All"></div>
 
     <div class="form-group">
-        <label asp-for="ActiveTournament.Name">Name:</label>
-        <input type="text" asp-for="ActiveTournament.Name" class="form-control" />
+        <label asp-for="ActiveGame.GameDateTime">Game Date & Time:</label>
+        <input type="datetime" asp-for="ActiveGame.GameDateTime" class="form-control" value="@Model.ActiveGame.GameDateTime.ToString("d")" />
     </div>
 
-    <div class="form-group">
-        <label asp-for="ActiveTournament.Game">Game:</label>
-        <input type="text" asp-for="ActiveTournament.Game" class="form-control" />
-    </div>
+	<div class="form-group">
+		<label asp-for="ActiveGame.Teams.First()">Team 1</label>
+		<select asp-for="ActiveGame.Teams.First()" class="form-control">
+			<option value="">Select a team..</option>
+			@foreach (Team t in Model.Teams)
+			{
+				<option value="@t.TeamId">@t.Name</option>
+			}
+		</select>
+	</div>
 
-    <div class="form-group">
-        <label asp-for="ActiveTournament.NumPlayersPerTeam">Number of Players Per Team:</label>
-        <input type="number" asp-for="ActiveTournament.NumPlayersPerTeam" class="form-control" />
-    </div>
+	<div class="form-group">
+		<label asp-for="ActiveGame.Teams.Last()">Team 2</label>
+		<select asp-for="ActiveGame.Teams.Last()" class="form-control">
+			<option value="">Select a team..</option>
+			@foreach (Team t in Model.Teams)
+			{
+				<option value="@t.TeamId">@t.Name</option>
+			}
+		</select>
+	</div>
 
-    <div class="form-group">
-        <label asp-for="ActiveTournament.StartDateTime">Start Date & Time:</label>
-        <input type="datetime" asp-for="ActiveTournament.StartDateTime" class="form-control" value="@Model.ActiveTournament.StartDateTime.ToString("d")" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ActiveTournament.NumGames">Number of Games:</label>
-        <input type="number" asp-for="ActiveTournament.NumGames" class="form-control" />
-    </div>
-
-    <input type="hidden" asp-for="ActiveTournament.TournamentId" />
+    <input type="hidden" asp-for="ActiveGame.GameId" />
 
     <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-controller="Tournament" asp-action="GetAllTournaments" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@Model.ActiveGame.TournamentId" class="btn btn-secondary">Cancel</a>
 </form>

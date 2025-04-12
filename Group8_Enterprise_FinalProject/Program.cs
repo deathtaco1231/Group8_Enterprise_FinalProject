@@ -1,7 +1,13 @@
+using Group8_Enterprise_FinalProject.Entities;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+var connStr = builder.Configuration.GetConnectionString("ETourneyProDB");
+builder.Services.AddDbContext<TournamentDbContext>(options => options.UseSqlServer(connStr));
 
 var app = builder.Build();
 

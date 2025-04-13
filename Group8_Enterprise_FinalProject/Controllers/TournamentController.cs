@@ -63,7 +63,15 @@ namespace Group8_Enterprise_FinalProject.Controllers
             {
                 return NotFound();
             }
-            return View("Edit", tournament);
+            else
+            {
+                TournamentViewModel tournamentViewModel = new TournamentViewModel()
+                {
+                    ActiveTournament = tournament
+                };
+
+                return View("Edit", tournamentViewModel);
+            }
         }
 
         // GET: Delete Tournament
@@ -140,6 +148,5 @@ namespace Group8_Enterprise_FinalProject.Controllers
         }
 
         private readonly TournamentDbContext _tournamentDbContext;
-
     }
 }

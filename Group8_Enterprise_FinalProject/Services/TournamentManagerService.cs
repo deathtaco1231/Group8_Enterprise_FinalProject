@@ -81,7 +81,7 @@ namespace PA2_JulianCumming_EnterpriseAppDev.Services
             string body = $@"
                     <h1>Hello 
             {playerName}, </h1><p>We wanted to let you know that your registration for the {tournamentName} tournament has been confirmed, and you are scheduled to play a game!</p>
-                    <p>Please click <a href=""https://localhost:7105/tournaments/
+                    <p>Please click <a href=""https://localhost:5001/Tournaments/
             {tournamentId}"">here</a> for more details about the tournament. You will be playing {gameName} at {gameDate.ToString("d")}.</p>
                     <p>Sincerely,<br>ETourneyPro</p>";
 
@@ -93,8 +93,8 @@ namespace PA2_JulianCumming_EnterpriseAppDev.Services
             string body = $@"
                     <h1>Hello 
             {playerName}, </h1><p>We wanted to remind you that you are schedueled to play {gameName} in the tournament {tournamentName}.</p>
-                    <p>Please click <a href=""https://localhost:7105/tournaments/
-            {tournamentId}"">here</a> for more details. Your game is scheduled to start in {inverseTimeDiff.ToString()} minutes.</p>
+                    <p>Please click <a href=""https://localhost:5001/Games/
+            {gameId}"">here</a> for more details. Your game is scheduled to start in {(-inverseTimeDiff).ToString()} minutes.</p>
                     <p>Sincerely,<br>ETourneyPro</p>";
 
             return body;

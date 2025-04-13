@@ -3,11 +3,15 @@
 @{
     ViewData["Title"] = "Edit game";
 
-    var team1 = Model.ActiveGame.Teams.Count > 0 ? Model.ActiveGame.Teams.First().Name : "TBD";
-    var team2 = Model.ActiveGame.Teams.Count > 1 ? Model.ActiveGame.Teams.Last().Name : "TBD";
-    var scores = Model.ActiveGame.Result.Split('-');
-    var team1Score = scores.Count() > 0 ? scores[0] : "0";
-    var team2Score = scores.Count() > 1 ? scores[1] : "0";
+    var team1Score = "0";
+    var team2Score = "0";
+
+    if (Model.ActiveGame.Teams.Count == 2)
+    {
+        var scores = Model.ActiveGame.Result.Split('-');
+        team1Score = scores[0];
+        team2Score = scores[1];
+    }    
 }
 
 <form asp-controller="Game" asp-action="HandleEditRequest" asp-route-id="@Model.ActiveGame.GameId" method="post" enctype="application/x-www-form-urlencoded">
@@ -19,23 +23,23 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="@team1">Team 1 Name:</label>
+        <label asp-for="ActiveGame.Teams.First().Name">Team 1 Name:</label>
         <input type="text" asp-for="ActiveGame.Teams.First().Name" class="form-control" />
     </div>
     
     <div class="form-group">
-        <label asp-for="ActiveGame.Result">Team 1 Score:</label>
-        <input type="number" asp-for="@team1Score" class="form-control" />
+        <label asp-for="@team1Score">Team 1 Score:</label>
+        <input type="number" asp-for="ActiveGame.Result[0]" class="form-control" />
     </div>
 
     <div class="form-group">
-        <label asp-for="@team2">Team 2 Name:</label>
+        <label asp-for="ActiveGame.Teams.Last().Name">Team 2 Name:</label>
         <input type="text" asp-for="ActiveGame.Teams.Last().Name" class="form-control" />
     </div>
 
     <div class="form-group">
-        <label asp-for="ActiveGame.Result">Team 2 Score:</label>
-        <input type="number" asp-for="@team2Score" class="form-control" />
+        <label asp-for="@team2Score">Team 2 Score:</label>
+        <input type="number" asp-for="ActiveGame.Result[2]" class="form-control" />
     </div>
 
     <input type="hidden" asp-for="ActiveGame.GameId" />

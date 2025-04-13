@@ -27,7 +27,7 @@ namespace Group8_Enterprise_FinalProject.Controllers
                 GameViewModel gameViewModel = new GameViewModel()
                 {
                     ActiveGame = game,
-                    WinningTeamName = game.GetWinningTeam() != null ? game.Teams.FirstOrDefault(t => t.TeamId == game.GetWinningTeam()).Name : null
+                    WinningTeamName = game.GetWinningTeam() != null ? game.Teams.FirstOrDefault(t => t.TeamId == game.GetWinningTeam()).Name : "TBD"
                 };
 
                 return View("Manage", gameViewModel);
@@ -50,6 +50,7 @@ namespace Group8_Enterprise_FinalProject.Controllers
                     ActiveGame = game,
                     WinningTeamName = game.GetWinningTeam() != null ? game.Teams.FirstOrDefault(t => t.TeamId == game.GetWinningTeam()).Name : "TBD"
                 };
+
                 return View("Edit", gameViewModel);
             }
         }

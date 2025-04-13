@@ -18,7 +18,8 @@ namespace Group8_Enterprise_FinalProject.Entities
         public string? Result { get; set; } = "0-0";
 
         //TournamentId (FK)
-        public int TournamentId { get; set; }
+        [Required]
+        public int? TournamentId { get; set; }
 
         //Tournament Reference
         public Tournament Tournament { get; set; } = null!;

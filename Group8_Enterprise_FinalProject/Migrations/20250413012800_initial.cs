@@ -220,7 +220,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         column: x => x.TournamentId,
                         principalTable: "Tournaments",
                         principalColumn: "TournamentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,11 +244,6 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Teams",
-                columns: new[] { "TeamId", "GameId", "Name", "TournamentId" },
-                values: new object[] { 4, 4, "Team D", 4 });
-
-            migrationBuilder.InsertData(
                 table: "Tournaments",
                 columns: new[] { "TournamentId", "Game", "Name", "NumGames", "NumPlayersPerTeam", "StartDateTime" },
                 values: new object[] { 1, "Valorant", "Spring Tournament", 1, 5, new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) });
@@ -264,25 +259,14 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Players",
-                columns: new[] { "PlayerId", "Name", "TeamId" },
-                values: new object[,]
-                {
-                    { 16, "Player 16", 4 },
-                    { 17, "Player 17", 4 },
-                    { 18, "Player 18", 4 },
-                    { 19, "Player 19", 4 },
-                    { 20, "Player 20", 4 }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Teams",
                 columns: new[] { "TeamId", "GameId", "Name", "TournamentId" },
                 values: new object[,]
                 {
                     { 1, 1, "Team A", 1 },
-                    { 2, 2, "Team B", 2 },
-                    { 3, 3, "Team C", 3 }
+                    { 2, 2, "Team B", 1 },
+                    { 3, 3, "Team C", 1 },
+                    { 4, 3, "Team D", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -304,7 +288,12 @@ namespace Group8_Enterprise_FinalProject.Migrations
                     { 12, "Player 12", 3 },
                     { 13, "Player 13", 3 },
                     { 14, "Player 14", 3 },
-                    { 15, "Player 15", 3 }
+                    { 15, "Player 15", 3 },
+                    { 16, "Player 16", 4 },
+                    { 17, "Player 17", 4 },
+                    { 18, "Player 18", 4 },
+                    { 19, "Player 19", 4 },
+                    { 20, "Player 20", 4 }
                 });
 
             migrationBuilder.CreateIndex(

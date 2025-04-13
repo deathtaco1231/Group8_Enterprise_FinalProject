@@ -46,6 +46,13 @@ namespace Group8_Enterprise_FinalProject.Entities
                 .HasForeignKey(t => t.TournamentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Define the primary key for the Game entity
+            modelBuilder.Entity<Team>()
+                .HasOne(t => t.Game)
+                .WithMany(g => g.Teams)
+                .HasForeignKey(t => t.GameId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Seed the database with some initial tournament data
             modelBuilder.Entity<Tournament>()
                 .HasData(
@@ -64,9 +71,9 @@ namespace Group8_Enterprise_FinalProject.Entities
             modelBuilder.Entity<Team>()
                 .HasData(
                     new Team { TeamId = 1, Name = "Team A", GameId = 1, TournamentId = 1 },
-                    new Team { TeamId = 2, Name = "Team B", GameId = 2, TournamentId = 2 },
-                    new Team { TeamId = 3, Name = "Team C", GameId = 3, TournamentId = 3 },
-                    new Team { TeamId = 4, Name = "Team D", GameId = 4, TournamentId = 4 }
+                    new Team { TeamId = 2, Name = "Team B", GameId = 2, TournamentId = 1 },
+                    new Team { TeamId = 3, Name = "Team C", GameId = 3, TournamentId = 1 },
+                    new Team { TeamId = 4, Name = "Team D", GameId = 3, TournamentId = 1 }
                 );
 
             // Seed the database with some initial player data

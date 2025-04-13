@@ -252,21 +252,21 @@ namespace Group8_Enterprise_FinalProject.Migrations
                             TeamId = 2,
                             GameId = 2,
                             Name = "Team B",
-                            TournamentId = 2
+                            TournamentId = 1
                         },
                         new
                         {
                             TeamId = 3,
                             GameId = 3,
                             Name = "Team C",
-                            TournamentId = 3
+                            TournamentId = 1
                         },
                         new
                         {
                             TeamId = 4,
-                            GameId = 4,
+                            GameId = 3,
                             Name = "Team D",
-                            TournamentId = 4
+                            TournamentId = 1
                         });
                 });
 
@@ -542,7 +542,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                     b.HasOne("Group8_Enterprise_FinalProject.Entities.Tournament", "Tournament")
                         .WithMany("Teams")
                         .HasForeignKey("TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Game");

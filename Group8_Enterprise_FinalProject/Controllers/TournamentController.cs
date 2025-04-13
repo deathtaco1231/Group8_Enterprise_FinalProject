@@ -17,7 +17,7 @@ namespace Group8_Enterprise_FinalProject.Controllers
         [HttpGet("/Tournaments")]
         public IActionResult GetAllTournaments()
         {
-            List<Tournament> tournaments = _tournamentDbContext.Tournaments.Include(to => to.Games).ToList();
+            List<Tournament> tournaments = _tournamentDbContext.Tournaments.Include(to => to.Games).ThenInclude(ga => ga.Teams).ToList();
 
             return View("List", tournaments);
         }
@@ -26,7 +26,7 @@ namespace Group8_Enterprise_FinalProject.Controllers
         [HttpGet("/Tournaments/{id}")]
         public IActionResult GetManageForm(int id)
         {
-            Tournament tournament = _tournamentDbContext.Tournaments.Where(to => to.TournamentId == id).Include(to => to.Games).First();
+            Tournament tournament = _tournamentDbContext.Tournaments.Where(to => to.TournamentId == id).Include(to => to.Games).ThenInclude(ga => ga.Teams).First();
             if (tournament == null)
             {
                 return NotFound();

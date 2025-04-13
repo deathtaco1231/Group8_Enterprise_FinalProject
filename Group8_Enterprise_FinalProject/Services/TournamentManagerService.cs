@@ -3,6 +3,9 @@ using System.Diagnostics.Metrics;
 using System.Net.Mail;
 using System.Net;
 using Hangfire;
+using Microsoft.EntityFrameworkCore.Metadata;
+using System.IO;
+using Group8_Enterprise_FinalProject.Entities;
 
 namespace PA2_JulianCumming_EnterpriseAppDev.Services
 {
@@ -62,6 +65,39 @@ namespace PA2_JulianCumming_EnterpriseAppDev.Services
 
             // Schedule the email using Hangfire
             BackgroundJob.Schedule(() => SendPlayerEmail(toAddress, subject, body), delay);
+        }
+
+        /// <summary>
+        /// Formats email sent to players upon successful registration with details passed as parameters
+        /// </summary>
+        /// <param name="playerName"></param>
+        /// <param name="tournamentName"></param>
+        /// <param name="gameName"></param>
+        /// <param name="gameDate"></param>
+        /// <returns></returns>
+        public string FormatRegistrationEmail(string playerName, string tournamentName, int tournamentId, string gameName, DateTime gameDate)
+        {
+            // Subject line is handled by caller, this method only concerns the body text with HTML wrapping (basically auto-formatting for caller)
+            string body = $@"
+                    <h1>Hello 
+            {playerName}, </h1><p>We wanted to let you know that your registration for the {tournamentName} tournament has been confirmed, and you are scheduled to play a game!</p>
+                    <p>Please click <a href=""https://localhost:7105/tournaments/
+            {tournamentId}"">here</a> for more details about the tournament. You will be playing {gameName} at {gameDate.ToString("d")}.</p>
+                    <p>Sincerely,<br>ETourneyPro</p>";
+
+            return body;
+        }
+        public string FormatReminderEmail(string playerName, string tournamentName, int gameId, string gameName, double inverseTimeDiff)
+        {
+            // Subject line is handled by caller, this method only concerns the body text with HTML wrapping (basically auto-formatting for caller)
+            string body = $@"
+                    <h1>Hello 
+            {playerName}, </h1><p>We wanted to remind you that you are schedueled to play {gameName} in the tournament {tournamentName}.</p>
+                    <p>Please click <a href=""https://localhost:7105/tournaments/
+            {tournamentId}"">here</a> for more details. Your game is scheduled to start in {inverseTimeDiff.ToString()} minutes.</p>
+                    <p>Sincerely,<br>ETourneyPro</p>";
+
+            return body;
         }
     }
 }

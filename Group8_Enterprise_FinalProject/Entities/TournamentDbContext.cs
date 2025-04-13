@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Group8_Enterprise_FinalProject.Models;
 using System.IO;
 
+
+
 namespace Group8_Enterprise_FinalProject.Entities
 {
     /// <summary>
@@ -22,7 +24,7 @@ namespace Group8_Enterprise_FinalProject.Entities
             : base(options)
         {
         }
-
+        
         public DbSet<Tournament> Tournaments { get; set; }
 
         public DbSet<Game> Games { get; set; }
@@ -31,13 +33,14 @@ namespace Group8_Enterprise_FinalProject.Entities
 
         public DbSet<Player> Players { get; set; }
 
+
         /// <summary>
         /// Add some records upon build
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); // Calling base method as specified in quiz instructions
+            base.OnModelCreating(modelBuilder); // Calling base method 
 
             // Define the primary key for the Tournament entity
             modelBuilder.Entity<Team>()

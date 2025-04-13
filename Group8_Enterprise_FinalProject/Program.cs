@@ -6,8 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Group8_Enterprise_FinalProject.Models;
 using Group8_Enterprise_FinalProject.Entities;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var hangfireConnStr = builder.Configuration.GetConnectionString("HangfireConnectionDB");
+// Configure Hangfire to use SQL Server storage (persists task information between runs of the app)
+builder.Services.AddHangfire(config =>
+{
+    config.UseSqlServerStorage(hangfireConnStr);
+});
 
 builder.Services.AddRouting(options =>
 {
@@ -18,7 +26,7 @@ builder.Services.AddRouting(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Add CORS support fir our API
+// Add CORS support for our API (basic policy, nothing crazy for this)
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowTournamentClients", policy => {
         policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
@@ -60,7 +68,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Calling static method to create Admin user, snippet #2 from Quiz 5 folder
+// Calling static method to create Admin (Organizer) user
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using (var scope = scopeFactory.CreateScope())
 {

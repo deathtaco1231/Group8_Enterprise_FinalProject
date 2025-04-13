@@ -43,27 +43,27 @@ namespace Group8_Enterprise_FinalProject.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("Game");
+                    b.ToTable("Games");
 
                     b.HasData(
                         new
                         {
                             GameId = 1,
-                            GameDateTime = new DateTime(2025, 4, 12, 15, 13, 50, 537, DateTimeKind.Local).AddTicks(7161),
+                            GameDateTime = new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Result = "0-0",
                             TournamentId = 1
                         },
                         new
                         {
                             GameId = 2,
-                            GameDateTime = new DateTime(2025, 4, 12, 16, 13, 50, 537, DateTimeKind.Local).AddTicks(7442),
+                            GameDateTime = new DateTime(2025, 4, 12, 1, 0, 0, 0, DateTimeKind.Unspecified),
                             Result = "0-0",
                             TournamentId = 1
                         },
                         new
                         {
                             GameId = 3,
-                            GameDateTime = new DateTime(2025, 4, 13, 15, 13, 50, 537, DateTimeKind.Local).AddTicks(7459),
+                            GameDateTime = new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Result = "0-0",
                             TournamentId = 1
                         });
@@ -88,7 +88,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Player");
+                    b.ToTable("Players");
 
                     b.HasData(
                         new
@@ -228,10 +228,6 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.PrimitiveCollection<string>("Record")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TournamentId")
                         .HasColumnType("int");
 
@@ -241,7 +237,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("Team");
+                    b.ToTable("Teams");
 
                     b.HasData(
                         new
@@ -249,32 +245,28 @@ namespace Group8_Enterprise_FinalProject.Migrations
                             TeamId = 1,
                             GameId = 1,
                             Name = "Team A",
-                            Record = "[0,0,0]",
                             TournamentId = 1
                         },
                         new
                         {
                             TeamId = 2,
-                            GameId = 1,
+                            GameId = 2,
                             Name = "Team B",
-                            Record = "[0,0,0]",
-                            TournamentId = 1
+                            TournamentId = 2
                         },
                         new
                         {
                             TeamId = 3,
-                            GameId = 2,
+                            GameId = 3,
                             Name = "Team C",
-                            Record = "[0,0,0]",
-                            TournamentId = 1
+                            TournamentId = 3
                         },
                         new
                         {
                             TeamId = 4,
-                            GameId = 2,
+                            GameId = 4,
                             Name = "Team D",
-                            Record = "[0,0,0]",
-                            TournamentId = 1
+                            TournamentId = 4
                         });
                 });
 
@@ -305,7 +297,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
 
                     b.HasKey("TournamentId");
 
-                    b.ToTable("Tournament");
+                    b.ToTable("Tournaments");
 
                     b.HasData(
                         new
@@ -315,7 +307,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                             Name = "Spring Tournament",
                             NumGames = 1,
                             NumPlayersPerTeam = 5,
-                            StartDateTime = new DateTime(2025, 4, 12, 15, 13, 50, 536, DateTimeKind.Local).AddTicks(1875)
+                            StartDateTime = new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 

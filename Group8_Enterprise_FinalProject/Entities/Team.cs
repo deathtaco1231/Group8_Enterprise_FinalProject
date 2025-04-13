@@ -14,10 +14,6 @@ namespace Group8_Enterprise_FinalProject.Entities
         [Required(ErrorMessage = "Please enter a team name")]
         public string? Name { get; set; }
 
-        //Win-Loss-Tie record (required)
-        [Required(ErrorMessage = "Please enter the win-loss-tie record")]
-        public int[] Record { get; set; } = new int[3]; // [Wins, Losses, Ties]
-
         //Players list (size must be exactly NumPlayersPerTeam)
         [Required(ErrorMessage = "Please add the players")]
         public ICollection<Player> Players { get; } = new List<Player>();

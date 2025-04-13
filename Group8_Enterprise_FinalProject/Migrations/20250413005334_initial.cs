@@ -53,7 +53,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tournament",
+                name: "Tournaments",
                 columns: table => new
                 {
                     TournamentId = table.Column<int>(type: "int", nullable: false)
@@ -66,7 +66,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tournament", x => x.TournamentId);
+                    table.PrimaryKey("PK_Tournaments", x => x.TournamentId);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,7 +176,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Game",
+                name: "Games",
                 columns: table => new
                 {
                     GameId = table.Column<int>(type: "int", nullable: false)
@@ -187,45 +187,44 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Game", x => x.GameId);
+                    table.PrimaryKey("PK_Games", x => x.GameId);
                     table.ForeignKey(
-                        name: "FK_Game_Tournament_TournamentId",
+                        name: "FK_Games_Tournaments_TournamentId",
                         column: x => x.TournamentId,
-                        principalTable: "Tournament",
+                        principalTable: "Tournaments",
                         principalColumn: "TournamentId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Team",
+                name: "Teams",
                 columns: table => new
                 {
                     TeamId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Record = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: false),
                     TournamentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Team", x => x.TeamId);
+                    table.PrimaryKey("PK_Teams", x => x.TeamId);
                     table.ForeignKey(
-                        name: "FK_Team_Game_GameId",
+                        name: "FK_Teams_Games_GameId",
                         column: x => x.GameId,
-                        principalTable: "Game",
+                        principalTable: "Games",
                         principalColumn: "GameId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Team_Tournament_TournamentId",
+                        name: "FK_Teams_Tournaments_TournamentId",
                         column: x => x.TournamentId,
-                        principalTable: "Tournament",
+                        principalTable: "Tournaments",
                         principalColumn: "TournamentId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Player",
+                name: "Players",
                 columns: table => new
                 {
                     PlayerId = table.Column<int>(type: "int", nullable: false)
@@ -235,43 +234,59 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Player", x => x.PlayerId);
+                    table.PrimaryKey("PK_Players", x => x.PlayerId);
                     table.ForeignKey(
-                        name: "FK_Player_Team_TeamId",
+                        name: "FK_Players_Teams_TeamId",
                         column: x => x.TeamId,
-                        principalTable: "Team",
+                        principalTable: "Teams",
                         principalColumn: "TeamId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
-                table: "Tournament",
-                columns: new[] { "TournamentId", "Game", "Name", "NumGames", "NumPlayersPerTeam", "StartDateTime" },
-                values: new object[] { 1, "Valorant", "Spring Tournament", 1, 5, new DateTime(2025, 4, 12, 15, 13, 50, 536, DateTimeKind.Local).AddTicks(1875) });
+                table: "Teams",
+                columns: new[] { "TeamId", "GameId", "Name", "TournamentId" },
+                values: new object[] { 4, 4, "Team D", 4 });
 
             migrationBuilder.InsertData(
-                table: "Game",
+                table: "Tournaments",
+                columns: new[] { "TournamentId", "Game", "Name", "NumGames", "NumPlayersPerTeam", "StartDateTime" },
+                values: new object[] { 1, "Valorant", "Spring Tournament", 1, 5, new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
+            migrationBuilder.InsertData(
+                table: "Games",
                 columns: new[] { "GameId", "GameDateTime", "Result", "TournamentId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 4, 12, 15, 13, 50, 537, DateTimeKind.Local).AddTicks(7161), "0-0", 1 },
-                    { 2, new DateTime(2025, 4, 12, 16, 13, 50, 537, DateTimeKind.Local).AddTicks(7442), "0-0", 1 },
-                    { 3, new DateTime(2025, 4, 13, 15, 13, 50, 537, DateTimeKind.Local).AddTicks(7459), "0-0", 1 }
+                    { 1, new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "0-0", 1 },
+                    { 2, new DateTime(2025, 4, 12, 1, 0, 0, 0, DateTimeKind.Unspecified), "0-0", 1 },
+                    { 3, new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "0-0", 1 }
                 });
 
             migrationBuilder.InsertData(
-                table: "Team",
-                columns: new[] { "TeamId", "GameId", "Name", "Record", "TournamentId" },
+                table: "Players",
+                columns: new[] { "PlayerId", "Name", "TeamId" },
                 values: new object[,]
                 {
-                    { 1, 1, "Team A", "[0,0,0]", 1 },
-                    { 2, 1, "Team B", "[0,0,0]", 1 },
-                    { 3, 2, "Team C", "[0,0,0]", 1 },
-                    { 4, 2, "Team D", "[0,0,0]", 1 }
+                    { 16, "Player 16", 4 },
+                    { 17, "Player 17", 4 },
+                    { 18, "Player 18", 4 },
+                    { 19, "Player 19", 4 },
+                    { 20, "Player 20", 4 }
                 });
 
             migrationBuilder.InsertData(
-                table: "Player",
+                table: "Teams",
+                columns: new[] { "TeamId", "GameId", "Name", "TournamentId" },
+                values: new object[,]
+                {
+                    { 1, 1, "Team A", 1 },
+                    { 2, 2, "Team B", 2 },
+                    { 3, 3, "Team C", 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Players",
                 columns: new[] { "PlayerId", "Name", "TeamId" },
                 values: new object[,]
                 {
@@ -289,12 +304,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                     { 12, "Player 12", 3 },
                     { 13, "Player 13", 3 },
                     { 14, "Player 14", 3 },
-                    { 15, "Player 15", 3 },
-                    { 16, "Player 16", 4 },
-                    { 17, "Player 17", 4 },
-                    { 18, "Player 18", 4 },
-                    { 19, "Player 19", 4 },
-                    { 20, "Player 20", 4 }
+                    { 15, "Player 15", 3 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -337,23 +347,23 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Game_TournamentId",
-                table: "Game",
+                name: "IX_Games_TournamentId",
+                table: "Games",
                 column: "TournamentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Player_TeamId",
-                table: "Player",
+                name: "IX_Players_TeamId",
+                table: "Players",
                 column: "TeamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Team_GameId",
-                table: "Team",
+                name: "IX_Teams_GameId",
+                table: "Teams",
                 column: "GameId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Team_TournamentId",
-                table: "Team",
+                name: "IX_Teams_TournamentId",
+                table: "Teams",
                 column: "TournamentId");
         }
 
@@ -376,7 +386,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Player");
+                name: "Players");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -385,13 +395,13 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Team");
+                name: "Teams");
 
             migrationBuilder.DropTable(
-                name: "Game");
+                name: "Games");
 
             migrationBuilder.DropTable(
-                name: "Tournament");
+                name: "Tournaments");
         }
     }
 }

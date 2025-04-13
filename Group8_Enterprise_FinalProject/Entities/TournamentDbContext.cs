@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Group8_Enterprise_FinalProject.Models;
+using System.IO;
 
 namespace Group8_Enterprise_FinalProject.Entities
 {
@@ -22,6 +23,13 @@ namespace Group8_Enterprise_FinalProject.Entities
         {
         }
 
+        public DbSet<Tournament> Tournaments { get; set; }
+
+        public DbSet<Game> Games { get; set; }
+
+        public DbSet<Team> Teams { get; set; }
+
+        public DbSet<Player> Players { get; set; }
 
         /// <summary>
         /// Add some records upon build
@@ -31,27 +39,34 @@ namespace Group8_Enterprise_FinalProject.Entities
         {
             base.OnModelCreating(modelBuilder); // Calling base method as specified in quiz instructions
 
+            // Define the primary key for the Tournament entity
+            modelBuilder.Entity<Team>()
+                .HasOne(t => t.Tournament)
+                .WithMany(t => t.Teams)
+                .HasForeignKey(t => t.TournamentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             // Seed the database with some initial tournament data
             modelBuilder.Entity<Tournament>()
                 .HasData(
-                    new Tournament { TournamentId = 1, Name = "Spring Tournament", Game = "Valorant", NumPlayersPerTeam = 5, StartDateTime = DateTime.Now, NumGames = 1}
+                    new Tournament { TournamentId = 1, Name = "Spring Tournament", Game = "Valorant", NumPlayersPerTeam = 5, StartDateTime = new DateTime(2025, 4, 12), NumGames = 1}
                 );
 
             // Seed the database with some initial game data
             modelBuilder.Entity<Game>()
                 .HasData(
-                    new Game { GameId = 1, GameDateTime = DateTime.Now, Result = "0-0", TournamentId = 1 },
-                    new Game { GameId = 2, GameDateTime = DateTime.Now.AddHours(1), Result = "0-0", TournamentId = 1 },
-                    new Game { GameId = 3, GameDateTime = DateTime.Now.AddDays(1), Result = "0-0", TournamentId = 1 }
+                    new Game { GameId = 1, GameDateTime = new DateTime(2025, 4, 12), Result = "0-0", TournamentId = 1 },
+                    new Game { GameId = 2, GameDateTime = new DateTime(2025, 4, 12).AddHours(1), Result = "0-0", TournamentId = 1 },
+                    new Game { GameId = 3, GameDateTime = new DateTime(2025, 4, 12).AddDays(1), Result = "0-0", TournamentId = 1 }
                 );
 
             // Seed the database with some initial team data
             modelBuilder.Entity<Team>()
                 .HasData(
-                    new Team { TeamId = 1, Record = new int[] { 0, 0, 0 }, Name = "Team A", GameId = 1, TournamentId = 1 },
-                    new Team { TeamId = 2, Record = new int[] { 0, 0, 0 }, Name = "Team B", GameId = 1, TournamentId = 1 },
-                    new Team { TeamId = 3, Record = new int[] { 0, 0, 0 }, Name = "Team C", GameId = 2, TournamentId = 1 },
-                    new Team { TeamId = 4, Record = new int[] { 0, 0, 0 }, Name = "Team D", GameId = 2, TournamentId = 1 }
+                    new Team { TeamId = 1, Name = "Team A", GameId = 1, TournamentId = 1 },
+                    new Team { TeamId = 2, Name = "Team B", GameId = 2, TournamentId = 2 },
+                    new Team { TeamId = 3, Name = "Team C", GameId = 3, TournamentId = 3 },
+                    new Team { TeamId = 4, Name = "Team D", GameId = 4, TournamentId = 4 }
                 );
 
             // Seed the database with some initial player data
@@ -112,6 +127,5 @@ namespace Group8_Enterprise_FinalProject.Entities
                 }
             }
         }
-
     }
 }

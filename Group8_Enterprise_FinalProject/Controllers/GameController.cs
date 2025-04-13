@@ -7,7 +7,7 @@ namespace Group8_Enterprise_FinalProject.Controllers
 {
     public class GameController : Controller
     {
-        public GameController(TournamentDbContext tournamentDbContext) 
+        public GameController(TournamentDbContext tournamentDbContext)
         {
             _tournamentDbContext = tournamentDbContext;
         }
@@ -67,6 +67,54 @@ namespace Group8_Enterprise_FinalProject.Controllers
             else
             {
                 return View("Delete", game);
+            }
+        }
+
+        // GET: Create Game
+        [HttpGet("/Tournaments/{id}/Games/Create")]
+        public IActionResult GetCreateForm(int id)
+        {
+            Tournament tournament = _tournamentDbContext.Tournaments.Where(to => to.TournamentId == id).Include(to => to.Games).ThenInclude(ga => ga.Teams).FirstOrDefault();
+            if (tournament == null)
+            {
+                return NotFound();
+            }
+            GameViewModel gameViewModel = new GameViewModel
+            {
+                ActiveGame = new Game(),
+                WinningTeamName = "TBD"
+            };
+
+            gameViewModel.ActiveGame.Tournament = tournament;
+            gameViewModel.ActiveGame.TournamentId = tournament.TournamentId;
+
+            return View("Create", gameViewModel);
+        }
+
+        // POST: Create Game
+        [HttpPost("/Tournaments/{id}/Games/Create")]
+        public IActionResult CreateNewGame(int id, GameViewModel gameViewModel)
+        {
+            Tournament tournament = _tournamentDbContext.Tournaments.Where(to => to.TournamentId == id).Include(to => to.Games).ThenInclude(ga => ga.Teams).FirstOrDefault();
+            if (tournament == null)
+            {
+                return NotFound();
+            }
+
+            gameViewModel.ActiveGame.Tournament = tournament;
+            gameViewModel.ActiveGame.TournamentId = tournament.TournamentId;
+
+            if (ModelState.IsValid)
+            {
+                _tournamentDbContext.Games.Add(gameViewModel.ActiveGame);
+                _tournamentDbContext.Teams.AddRange(gameViewModel.ActiveGame.Teams);
+                _tournamentDbContext.SaveChanges();
+
+                return RedirectToAction("GetManageForm", "Tournament", new { id = tournament.TournamentId });
+            }
+            else
+            {
+                return View("Create", gameViewModel);
             }
         }
 

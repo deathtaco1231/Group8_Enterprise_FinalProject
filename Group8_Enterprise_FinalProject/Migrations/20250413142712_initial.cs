@@ -264,9 +264,9 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 values: new object[,]
                 {
                     { 1, 1, "Team A", 1 },
-                    { 2, 2, "Team B", 1 },
-                    { 3, 3, "Team C", 1 },
-                    { 4, 3, "Team D", 1 }
+                    { 2, 1, "Team B", 1 },
+                    { 3, 2, "Team C", 1 },
+                    { 4, 2, "Team D", 1 }
                 });
 
             migrationBuilder.InsertData(

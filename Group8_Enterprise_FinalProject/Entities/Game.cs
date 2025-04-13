@@ -24,9 +24,8 @@ namespace Group8_Enterprise_FinalProject.Entities
         //Tournament Reference
         public Tournament Tournament { get; set; } = null!;
 
-        //Teams list (size must be exactly 2)
+        //Teams list (size must be exactly 2, if size is 0, teams are TBD)
         [Required(ErrorMessage = "Please add the teams")]
-        [MinLength(2, ErrorMessage = "There must be exactly 2 teams")]
         [MaxLength(2, ErrorMessage = "There must be exactly 2 teams")]
         public ICollection<Team> Teams { get; } = new List<Team>();
 

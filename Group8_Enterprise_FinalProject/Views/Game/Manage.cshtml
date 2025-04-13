@@ -3,15 +3,17 @@
 @{
 	ViewData["Title"] = "Manage game";
 
-	var team1Players = Model.ActiveGame.Teams.First().Players ?? new List<Player>();
-	var team2Players = Model.ActiveGame.Teams.Last().Players ?? new List<Player>();
+	var team1 = Model.ActiveGame.Teams.Count > 0 ? Model.ActiveGame.Teams.First().Name : "TBD";
+	var team2 = Model.ActiveGame.Teams.Count > 1 ? Model.ActiveGame.Teams.Last().Name : "TBD";
+	var team1Players = Model.ActiveGame.Teams.FirstOrDefault()?.Players ?? new List<Player>();
+	var team2Players = Model.ActiveGame.Teams.LastOrDefault()?.Players ?? new List<Player>();
 }
 
 <h2>Manage your game</h2>
 
-<a asp-controller="Tournaments" asp-action="GetManageForm" asp-route-id="@Model.ActiveGame.TournamentId">This game's tournament</a>
+<a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@Model.ActiveGame.TournamentId">This game's tournament</a>
 <span class="px-2">|</span>
-<a asp-controller="Tournaments" asp-action="GetAllTournaments">All tournaments</a>
+<a asp-controller="Tournament" asp-action="GetAllTournaments">All tournaments</a>
 <span class="px-2">|</span>
 <a asp-controller="Game" asp-action="GetEditForm" asp-route-id="@Model.ActiveGame.GameId">Edit this game</a>
 <span class="px-2">|</span>
@@ -27,7 +29,7 @@
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>
-			<th>Team 1</th>
+			<th>@team1</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -43,7 +45,7 @@
 <table class="table table-bordered table-striped">
 	<thead>
 		<tr>
-			<th>Team 2</th>
+			<th>@team2</th>
 		</tr>
 	</thead>
 	<tbody>

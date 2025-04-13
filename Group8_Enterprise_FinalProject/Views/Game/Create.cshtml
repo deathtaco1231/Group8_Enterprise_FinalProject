@@ -13,25 +13,13 @@
 		</div>
 
 		<div class="form-group">
-			<label asp-for="ActiveGame.Teams.First()">Team 1</label>
-			<select asp-for="ActiveGame.Teams.First()" class="form-control">
-				<option value="">Select a team..</option>
-				@foreach (Team t in Model.Teams)
-				{
-					<option value="@t.TeamId">@t.Name</option>
-				}
-			</select>
+			<label asp-for="ActiveGame.Teams.First().Name">Team 1 Name:</label>
+			<input type="text" asp-for="ActiveGame.Teams.First().Name" class="form-control" />
 		</div>
 
 		<div class="form-group">
-			<label asp-for="ActiveGame.Teams.Last()">Team 2</label>
-			<select asp-for="ActiveGame.Teams.Last()" class="form-control">
-				<option value="">Select a team..</option>
-				@foreach (Team t in Model.Teams)
-				{
-					<option value="@t.TeamId">@t.Name</option>
-				}
-			</select>
+			<label asp-for="ActiveGame.Teams.Last().Name">Team 2 Name:</label>
+			<input type="text" asp-for="ActiveGame.Teams.Last().Name" class="form-control" />
 		</div>
 	</div>
 

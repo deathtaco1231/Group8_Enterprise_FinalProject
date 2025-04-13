@@ -33,5 +33,35 @@ namespace Group8_Enterprise_FinalProject.Entities
         {
             return Teams.Count == 2 && Teams.ElementAt(0).TeamId != Teams.ElementAt(1).TeamId;
         }
+
+        //Method to determine which team won
+        public int? GetWinningTeam()
+        {
+            if (string.IsNullOrEmpty(Result))
+            {
+                return null; // No result available
+            }
+            var scores = Result.Split('-');
+            if (scores.Length != 2)
+            {
+                return null; // Invalid result format
+            }
+            if (int.TryParse(scores[0], out int score1) && int.TryParse(scores[1], out int score2))
+            {
+                if (score1 > score2)
+                {
+                    return Teams.ElementAt(0).TeamId; // Team 1 wins
+                }
+                else if (score2 > score1)
+                {
+                    return Teams.ElementAt(1).TeamId; // Team 2 wins
+                }
+                else
+                {
+                    return null; // Tie
+                }
+            }
+            return null; // Invalid score format
+        }
     }
 }

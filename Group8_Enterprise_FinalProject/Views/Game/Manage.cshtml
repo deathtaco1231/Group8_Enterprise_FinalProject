@@ -1,0 +1,69 @@
+﻿@model GameViewModel
+
+@{
+	ViewData["Title"] = "Manage game";
+
+	var team1Players = Model.ActiveGame.Teams.First().Players ?? new List<Player>();
+	var team2Players = Model.ActiveGame.Teams.Last().Players ?? new List<Player>();
+}
+
+<h2>Manage your game</h2>
+
+<a asp-controller="Tournaments" asp-action="GetManageForm" asp-route-id="@Model.ActiveGame.TournamentId">This game's tournament</a>
+<span class="px-2">|</span>
+<a asp-controller="Tournaments" asp-action="GetAllTournaments">All tournaments</a>
+<span class="px-2">|</span>
+<a asp-controller="Game" asp-action="GetEditForm" asp-route-id="@Model.ActiveGame.GameId">Edit this game</a>
+<span class="px-2">|</span>
+<a asp-controller="Game" asp-action="GetDeleteForm" asp-route-id="@Model.ActiveGame.GameId">Delete this game</a>
+
+<hr />
+
+<h4>
+	Game #@Model.ActiveGame.GameId -@Model.ActiveGame.Tournament.Name-
+</h4>
+
+<h4>Teams:</h4>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Team 1</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var player in team1Players)
+		{
+			<tr>
+				<td>@player.Name</td>
+			</tr>
+		}
+	</tbody>
+</table>
+<h4>vs</h4>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Team 2</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var player in team2Players)
+		{
+			<tr>
+				<td>@player.Name</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<h4>Results:</h4>
+<p>
+	@if (Model.ActiveGame.Result == "0-0")
+	{
+		<span class="text-danger">Not played</span>
+	}
+	else
+	{
+		<span>@Model.ActiveGame.Result - @Model.WinningTeamName</span>
+	}
+</p>

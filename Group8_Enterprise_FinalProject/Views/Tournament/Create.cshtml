@@ -1,0 +1,38 @@
+﻿@model TournamentViewModel
+
+@{
+	ViewData["Title"] = "Create a party";
+}
+
+<form asp-controller="Tournament" asp-action="CreateNewTournament" method="post" enctype="application/x-www-form-urlencoded">
+	<div class="text-danger" asp-validation-summary="All">
+
+		<div class="form-group">
+			<label asp-for="ActiveTournament.Name">Name:</label>
+			<input type="text" asp-for="ActiveTournament.Name" class="form-control" />
+		</div>
+
+		<div class="form-group">
+			<label asp-for="ActiveTournament.Game">Game:</label>
+			<input type="text" asp-for="ActiveTournament.Game" class="form-control" />
+		</div>
+
+		<div class="form-group">
+			<label asp-for="ActiveTournament.NumPlayersPerTeam">Number of Players Per Team:</label>
+			<input type="number" asp-for="ActiveTournament.NumPlayersPerTeam" class="form-control" />
+		</div>
+
+		<div class="form-group">
+			<label asp-for="ActiveTournament.StartDateTime">Start Date & Time:</label>
+			<input type="datetime" asp-for="ActiveTournament.StartDateTime" class="form-control" value="@Model.ActiveTournament.StartDateTime.ToString("d")" />
+		</div>
+
+		<div class="form-group">
+			<label asp-for="ActiveTournament.NumGames">Number of Games:</label>
+			<input type="text" asp-for="ActiveTournament.NumGames" class="form-control" />
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Add</button>
+	<a asp-controller="Tournament" asp-action="GetAllTournaments" class="btn btn-secondary">Cancel</a>
+</form>

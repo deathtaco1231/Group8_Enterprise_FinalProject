@@ -4,6 +4,7 @@ using Group8_Enterprise_FinalProject.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Group8_Enterprise_FinalProject.Migrations
 {
     [DbContext(typeof(TournamentDbContext))]
-    partial class TournamentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250413012800_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,7 +315,6 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 });
 
             modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.User", b =>
-            modelBuilder.Entity("Group8_Enterprise_FinalProject.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -563,7 +565,6 @@ namespace Group8_Enterprise_FinalProject.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("Group8_Enterprise_FinalProject.Entities.User", null)
-                    b.HasOne("Group8_Enterprise_FinalProject.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -573,7 +574,6 @@ namespace Group8_Enterprise_FinalProject.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("Group8_Enterprise_FinalProject.Entities.User", null)
-                    b.HasOne("Group8_Enterprise_FinalProject.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -588,7 +588,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Group8_Enterprise_FinalProject.Models.User", null)
+                    b.HasOne("Group8_Enterprise_FinalProject.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -597,7 +597,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Group8_Enterprise_FinalProject.Models.User", null)
+                    b.HasOne("Group8_Enterprise_FinalProject.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,0 +1,19 @@
+﻿@model Game
+
+@{
+    ViewData["Title"] = "Delete game";
+}
+
+<h4>Are you sure you want to delete?</h4>
+<p>
+	@Model.Teams.First() Vs. @Model.Teams.Last() On @Model.GameDateTime.ToString("d")<br />
+</p>
+
+<form asp-controller="Game" asp-action="HandleDeleteRequest" asp-route-id="@Model.GameId" method="post" enctype="application/x-www-form-urlencoded">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <input type="hidden" asp-for="GameId" />
+
+    <button type="submit" class="btn btn-primary">Delete</button>
+    <a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@Model.TournamentId" class="btn btn-secondary">Cancel</a>
+</form>

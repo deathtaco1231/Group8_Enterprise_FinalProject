@@ -1,0 +1,19 @@
+﻿@model Tournament
+
+@{
+    ViewData["Title"] = "Delete tournament";
+}
+
+<h4>Are you sure you want to delete?</h4>
+<p>
+    @Model.Name (@Model.Games.Count Games)
+</p>
+
+<form asp-controller="Tournament" asp-action="HandleDeleteRequest" asp-route-id="@Model.TournamentId" method="post" enctype="application/x-www-form-urlencoded">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <input type="hidden" asp-for="TournamentId" />
+
+    <button type="submit" class="btn btn-primary">Delete</button>
+    <a asp-controller="Tournament" asp-action="GetAllTournaments" class="btn btn-secondary">Cancel</a>
+</form>

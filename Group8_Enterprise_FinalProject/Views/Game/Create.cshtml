@@ -1,0 +1,28 @@
+﻿@model GameViewModel
+
+@{
+	ViewData["Title"] = "Create a game";
+}
+
+<form asp-controller="Game" asp-action="CreateNewGame" method="post" enctype="application/x-www-form-urlencoded">
+	<div class="text-danger" asp-validation-summary="All">
+
+		<div class="form-group">
+			<label asp-for="ActiveGame.GameDateTime">Game Date & Time:</label>
+			<input type="datetime" asp-for="ActiveGame.GameDateTime" class="form-control" value="@Model.ActiveGame.GameDateTime.ToString("d")" />
+		</div>
+
+		<div class="form-group">
+			<label asp-for="ActiveGame.Teams.First().Name">Team 1 Name:</label>
+			<input type="text" asp-for="ActiveGame.Teams.First().Name" class="form-control" />
+		</div>
+
+		<div class="form-group">
+			<label asp-for="ActiveGame.Teams.Last().Name">Team 2 Name:</label>
+			<input type="text" asp-for="ActiveGame.Teams.Last().Name" class="form-control" />
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary">Add</button>
+	<a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@Model.ActiveGame.TournamentId" class="btn btn-secondary">Cancel</a>
+</form>

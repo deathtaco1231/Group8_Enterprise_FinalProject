@@ -312,7 +312,6 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 });
 
             modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.User", b =>
-            modelBuilder.Entity("Group8_Enterprise_FinalProject.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -563,7 +562,6 @@ namespace Group8_Enterprise_FinalProject.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("Group8_Enterprise_FinalProject.Entities.User", null)
-                    b.HasOne("Group8_Enterprise_FinalProject.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -573,7 +571,6 @@ namespace Group8_Enterprise_FinalProject.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("Group8_Enterprise_FinalProject.Entities.User", null)
-                    b.HasOne("Group8_Enterprise_FinalProject.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -588,7 +585,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Group8_Enterprise_FinalProject.Models.User", null)
+                    b.HasOne("Group8_Enterprise_FinalProject.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -597,7 +594,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Group8_Enterprise_FinalProject.Models.User", null)
+                    b.HasOne("Group8_Enterprise_FinalProject.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

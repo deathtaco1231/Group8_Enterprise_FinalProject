@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Group8_Enterprise_FinalProject.Migrations
 {
     /// <inheritdoc />
@@ -48,6 +50,23 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tournaments",
+                columns: table => new
+                {
+                    TournamentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Game = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NumPlayersPerTeam = table.Column<int>(type: "int", nullable: false),
+                    StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NumGames = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tournaments", x => x.TournamentId);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +175,127 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Games",
+                columns: table => new
+                {
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Result = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TournamentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Games", x => x.GameId);
+                    table.ForeignKey(
+                        name: "FK_Games_Tournaments_TournamentId",
+                        column: x => x.TournamentId,
+                        principalTable: "Tournaments",
+                        principalColumn: "TournamentId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Teams",
+                columns: table => new
+                {
+                    TeamId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    TournamentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Teams", x => x.TeamId);
+                    table.ForeignKey(
+                        name: "FK_Teams_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Teams_Tournaments_TournamentId",
+                        column: x => x.TournamentId,
+                        principalTable: "Tournaments",
+                        principalColumn: "TournamentId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Players",
+                columns: table => new
+                {
+                    PlayerId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TeamId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Players", x => x.PlayerId);
+                    table.ForeignKey(
+                        name: "FK_Players_Teams_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "Teams",
+                        principalColumn: "TeamId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tournaments",
+                columns: new[] { "TournamentId", "Game", "Name", "NumGames", "NumPlayersPerTeam", "StartDateTime" },
+                values: new object[] { 1, "Valorant", "Spring Tournament", 1, 5, new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
+            migrationBuilder.InsertData(
+                table: "Games",
+                columns: new[] { "GameId", "GameDateTime", "Result", "TournamentId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "0-0", 1 },
+                    { 2, new DateTime(2025, 4, 12, 1, 0, 0, 0, DateTimeKind.Unspecified), "0-0", 1 },
+                    { 3, new DateTime(2025, 4, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), "0-0", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Teams",
+                columns: new[] { "TeamId", "GameId", "Name", "TournamentId" },
+                values: new object[,]
+                {
+                    { 1, 1, "Team A", 1 },
+                    { 2, 2, "Team B", 1 },
+                    { 3, 3, "Team C", 1 },
+                    { 4, 3, "Team D", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Players",
+                columns: new[] { "PlayerId", "Name", "TeamId" },
+                values: new object[,]
+                {
+                    { 1, "Player 1", 1 },
+                    { 2, "Player 2", 1 },
+                    { 3, "Player 3", 1 },
+                    { 4, "Player 4", 1 },
+                    { 5, "Player 5", 1 },
+                    { 6, "Player 6", 2 },
+                    { 7, "Player 7", 2 },
+                    { 8, "Player 8", 2 },
+                    { 9, "Player 9", 2 },
+                    { 10, "Player 10", 2 },
+                    { 11, "Player 11", 3 },
+                    { 12, "Player 12", 3 },
+                    { 13, "Player 13", 3 },
+                    { 14, "Player 14", 3 },
+                    { 15, "Player 15", 3 },
+                    { 16, "Player 16", 4 },
+                    { 17, "Player 17", 4 },
+                    { 18, "Player 18", 4 },
+                    { 19, "Player 19", 4 },
+                    { 20, "Player 20", 4 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +334,26 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_TournamentId",
+                table: "Games",
+                column: "TournamentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Players_TeamId",
+                table: "Players",
+                column: "TeamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_GameId",
+                table: "Teams",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_TournamentId",
+                table: "Teams",
+                column: "TournamentId");
         }
 
         /// <inheritdoc />
@@ -215,10 +375,22 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Players");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Teams");
+
+            migrationBuilder.DropTable(
+                name: "Games");
+
+            migrationBuilder.DropTable(
+                name: "Tournaments");
         }
     }
 }

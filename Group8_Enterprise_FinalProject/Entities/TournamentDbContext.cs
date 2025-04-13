@@ -5,8 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Group8_Enterprise_FinalProject.Models;
 using System.IO;
 
-
-
 namespace Group8_Enterprise_FinalProject.Entities
 {
     /// <summary>

@@ -3,14 +3,18 @@ using Group8_Enterprise_FinalProject.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Group8_Enterprise_FinalProject.Models;
+using Group8_Enterprise_FinalProject.Services;
 
 namespace Group8_Enterprise_FinalProject.Controllers
 {
     public class TournamentController : Controller
     {
-        public TournamentController(TournamentDbContext tournamentDbContext)
+        private TournamentDbContext _tournamentDbContext;
+        private ITournamentManagerService _tournamentManagerService;
+        public TournamentController(TournamentDbContext tournamentDbContext, ITournamentManagerService tournamentManagerService)
         {
             _tournamentDbContext = tournamentDbContext;
+            _tournamentManagerService = tournamentManagerService;
         }
 
         // GET: All Tournaments
@@ -138,8 +142,6 @@ namespace Group8_Enterprise_FinalProject.Controllers
                 return RedirectToAction("GetAllTournaments");
             }
         }
-
-        private readonly TournamentDbContext _tournamentDbContext;
 
     }
 }

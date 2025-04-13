@@ -4,7 +4,7 @@ using System.Net.Mail;
 using System.Net;
 using Hangfire;
 
-namespace PA2_JulianCumming_EnterpriseAppDev.Services
+namespace Group8_Enterprise_FinalProject.Services
 {
     public class TournamentManagerService : ITournamentManagerService
     {

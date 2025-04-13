@@ -1,4 +1,4 @@
-﻿namespace PA2_JulianCumming_EnterpriseAppDev.Services
+﻿namespace Group8_Enterprise_FinalProject.Services
 {
     // Interface defining methods for the Party Manager Service must adhere to
     public interface ITournamentManagerService

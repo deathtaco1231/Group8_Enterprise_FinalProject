@@ -110,6 +110,8 @@ namespace Group8_Enterprise_FinalProject.Controllers
                 WinningTeamName = "TBD"
             };
 
+
+            gameViewModel.ActiveGame.GameDateTime = DateTime.Now;
             gameViewModel.ActiveGame.Tournament = tournament;
             gameViewModel.ActiveGame.TournamentId = tournament.TournamentId;
 

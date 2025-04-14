@@ -24,7 +24,7 @@
 
 		<div class="form-group">
 			<label asp-for="ActiveTournament.StartDateTime">Start Date & Time:</label>
-			<input type="datetime" asp-for="ActiveTournament.StartDateTime" class="form-control" value="@Model.ActiveTournament.StartDateTime.ToString("d")" />
+			<input type="datetime-local" asp-for="ActiveTournament.StartDateTime" class="form-control" value="@Model.ActiveTournament.StartDateTime.ToString("yyyy-MM-ddTHH:mm")" />
 		</div>
 
 		<div class="form-group">

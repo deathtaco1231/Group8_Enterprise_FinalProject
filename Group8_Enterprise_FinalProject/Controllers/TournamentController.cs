@@ -74,6 +74,8 @@ namespace Group8_Enterprise_FinalProject.Controllers
                 ActiveTournament = new Tournament(),
             };
 
+            tournamentViewModel.ActiveTournament.StartDateTime = DateTime.Now;
+
             return View("Create", tournamentViewModel);
         }
 

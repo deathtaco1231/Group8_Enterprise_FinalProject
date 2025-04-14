@@ -23,7 +23,7 @@
 
     <div class="form-group">
         <label asp-for="ActiveGame.GameDateTime">Game Date &amp; Time:</label>
-        <input type="datetime" asp-for="ActiveGame.GameDateTime" class="form-control" />
+        <input type="datetime-local" asp-for="ActiveGame.GameDateTime" class="form-control" value="@Model.ActiveGame.GameDateTime.ToString("yyyy-MM-ddTHH:mm")" />
     </div>
 
     <div class="form-group">

@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Group8_Enterprise_FinalProject.Controllers
 {
+    /// <summary>
+    /// Controller defining actions for game management (create, edit, etc.)
+    /// </summary>
     public class GameController : Controller
     {
         private TournamentDbContext _tournamentDbContext;

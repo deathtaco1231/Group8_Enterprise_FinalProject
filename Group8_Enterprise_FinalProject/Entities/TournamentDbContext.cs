@@ -14,8 +14,7 @@ namespace Group8_Enterprise_FinalProject.Entities
     public class TournamentDbContext : IdentityDbContext<User>
     {
         /// <summary>
-        /// Define a constructor that simply passes the options argument
-        /// up to the base class constuctor
+        /// Construct DB context class with options
         /// </summary>
         /// <param name="options"></param>
         public TournamentDbContext(DbContextOptions options)
@@ -104,6 +103,7 @@ namespace Group8_Enterprise_FinalProject.Entities
                     new Player { PlayerId = 20, Name = "Player 20", TeamId = 4 }
                 );
 
+            // Cascading delete for tournament registrations (forgot to add other cascade deletes for other entities, but remembered for this one lol)
             modelBuilder.Entity<TournamentRegistration>()
                 .HasOne(tr => tr.Tournament)
                 .WithMany(t => t.Registrations) // Ensure Tournament has this property

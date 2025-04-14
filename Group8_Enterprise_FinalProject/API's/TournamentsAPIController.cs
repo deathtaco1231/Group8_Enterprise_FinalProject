@@ -3,17 +3,23 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Group8_Enterprise_FinalProject.Entities;
 using Group8_Enterprise_FinalProject.Messages;
+using Group8_Enterprise_FinalProject.Services;
 
 namespace Group8_Enterprise_FinalProject.API_s
 {
+    /// <summary>
+    /// Controller for handling tournament-related API requests 
+    /// </summary>
     [ApiController]
     [Route("tournaments-api")]
     public class TournamentsAPIController : ControllerBase
     {
-        private readonly TournamentDbContext _dbContext;
+        private TournamentDbContext _tournamentDbContext;
+        private ITournamentManagerService _tournamentManagerService;
+
         public TournamentsAPIController(TournamentDbContext context)
         {
-            _dbContext = context;
+            _tournamentDbContext = context;
         }
 
         /// <summary>
@@ -37,12 +43,12 @@ namespace Group8_Enterprise_FinalProject.API_s
         }
 
         /// <summary>
-        /// 1. Return all tournaments.
+        /// Return all tournaments to API caller
         /// </summary>
         [HttpGet("tournaments")]
         public IActionResult GetAllTournaments()
         {
-            var tournaments = _dbContext.Tournaments.ToList();
+            var tournaments = _tournamentDbContext.Tournaments.ToList();
             if (!tournaments.Any())
             {
                 return NoContent();
@@ -63,12 +69,12 @@ namespace Group8_Enterprise_FinalProject.API_s
         }
 
         /// <summary>
-        /// 2. Return all games for a specific tournament.
+        /// Return all games for a specific tournament by the tournaments ID value passed as parameterk
         /// </summary>
         [HttpGet("tournaments/{tournamentId:int}/games")]
         public IActionResult GetGamesForTournament(int tournamentId)
         {
-            var tournament = _dbContext.Tournaments
+            var tournament = _tournamentDbContext.Tournaments
                 .Include(t => t.Games)
                     .ThenInclude(g => g.Teams)
                 .FirstOrDefault(t => t.TournamentId == tournamentId);
@@ -91,7 +97,7 @@ namespace Group8_Enterprise_FinalProject.API_s
         }
 
         /// <summary>
-        /// 3. Submit registration details (name and email) for a specific tournament.
+        /// Submit registration details (name and email) for a specific tournament
         /// </summary>
         [HttpPost("tournaments/{tournamentId:int}/register")]
         public IActionResult RegisterPlayer(int tournamentId, [FromBody] TournamentRegistrationDTO regDto)
@@ -101,7 +107,7 @@ namespace Group8_Enterprise_FinalProject.API_s
                 return BadRequest("Name and email are required.");
             }
 
-            var tournament = _dbContext.Tournaments.Find(tournamentId);
+            var tournament = _tournamentDbContext.Tournaments.Find(tournamentId);
             if (tournament == null)
             {
                 return NotFound($"Tournament with id {tournamentId} not found.");
@@ -114,8 +120,14 @@ namespace Group8_Enterprise_FinalProject.API_s
                 TournamentId = tournamentId
             };
 
-            _dbContext.TournamentRegistrations.Add(registration);
-            _dbContext.SaveChanges();
+            _tournamentDbContext.TournamentRegistrations.Add(registration);
+            _tournamentDbContext.SaveChanges();
+
+            // Send player their registration confirmation email once registration has been added to the database successfully
+            string emailBody = _tournamentManagerService.FormatRegistrationEmail(regDto.Name, tournament.Name, tournament.TournamentId, tournament.Game);
+            string subject = "Registration for " + tournament.Name + " Tournament";
+            string email = regDto.Email;
+            _tournamentManagerService.SendPlayerEmail(email, subject, emailBody);
 
             var resultDto = new TournamentRegistrationDetails
             {
@@ -131,12 +143,12 @@ namespace Group8_Enterprise_FinalProject.API_s
         }
 
         /// <summary>
-        /// 4. Retrieve details for an individual game.
+        /// Retrieve details for an individual game by ID passed as parameter
         /// </summary>
         [HttpGet("games/{gameId:int}")]
         public IActionResult GetGameById(int gameId)
         {
-            var game = _dbContext.Games
+            var game = _tournamentDbContext.Games
                 .Include(g => g.Teams)
                 .Include(g => g.Tournament)
                 .FirstOrDefault(g => g.GameId == gameId);

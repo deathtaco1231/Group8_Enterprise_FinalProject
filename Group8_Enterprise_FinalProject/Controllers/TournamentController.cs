@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Group8_Enterprise_FinalProject.Controllers
 {
+    /// <summary>
+    /// Controller defining actions for tournament management (create, edit, etc.)
+    /// </summary>
     public class TournamentController : Controller
     {
         private TournamentDbContext _tournamentDbContext;
@@ -18,7 +21,6 @@ namespace Group8_Enterprise_FinalProject.Controllers
             _tournamentManagerService = tournamentManagerService;
         }
 
-        // GET: All Tournaments
         /// <summary>
         /// Simple list of tournaments returned from database (if any exist)
         /// </summary>
@@ -35,7 +37,6 @@ namespace Group8_Enterprise_FinalProject.Controllers
             return View("List", tournaments);
         }
 
-        // GET: Tournament Details
         /// <summary>
         /// Returns view with details of tournament. Game details are accesed through this for each tournament.
         /// </summary>
@@ -60,7 +61,6 @@ namespace Group8_Enterprise_FinalProject.Controllers
             }
         }
 
-        // GET: Create Tournament
         /// <summary>
         /// Returns view with empty model for creating a brand new tournament.
         /// </summary>
@@ -105,7 +105,6 @@ namespace Group8_Enterprise_FinalProject.Controllers
             }
         }
 
-        // GET: Delete Tournament
         /// <summary>
         /// Returns view with tournament details for deleting. The tournament is passed as a parameter to the view.
         /// </summary>
@@ -123,7 +122,6 @@ namespace Group8_Enterprise_FinalProject.Controllers
             return View("Delete", tournament);
         }
 
-        // POST: Create Tournament
         /// <summary>
         /// Handles a creation request after user submits (completed) creation form, or rejects it if invalid.
         /// </summary>
@@ -145,7 +143,6 @@ namespace Group8_Enterprise_FinalProject.Controllers
             return View("Create", tournamentViewModel);
         }
 
-        // POST: Edit Tournament
         /// <summary>
         /// Handles an edit request after user submits (completed) edit form, or rejects it if invalid.
         /// </summary>
@@ -180,7 +177,6 @@ namespace Group8_Enterprise_FinalProject.Controllers
             }
         }
 
-        // POST: Delete Tournament
         /// <summary>
         /// Deletes the tournament of ID value passed as parameter (if it exists within the database)
         /// </summary>
@@ -190,15 +186,22 @@ namespace Group8_Enterprise_FinalProject.Controllers
         [HttpPost("/Tournaments/Delete/{id}")]
         public IActionResult HandleDeleteRequest(int id)
         {
-            Tournament tournament = _tournamentDbContext.Tournaments.Include(to => to.Games).FirstOrDefault(to => to.TournamentId == id);
+            Tournament tournament = _tournamentDbContext.Tournaments.Include(to => to.Games).ThenInclude(to => to.Teams).FirstOrDefault(to => to.TournamentId == id);
             if (tournament == null)
             {
                 return NotFound();
             }
             else
             {
+                // Deleting dependent teams first (forgot to set up cascade delete in DB so this takes place of that)
+                if (tournament.Teams != null && tournament.Teams.Any())
+                {
+                    _tournamentDbContext.Teams.RemoveRange(tournament.Teams);
+                }
+                
                 _tournamentDbContext.Tournaments.Remove(tournament);
                 _tournamentDbContext.SaveChanges();
+
                 return RedirectToAction("GetAllTournaments");
             }
         }

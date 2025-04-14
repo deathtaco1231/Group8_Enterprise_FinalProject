@@ -6,6 +6,13 @@
 
 <h2>Tournaments List</h2>
 
+<p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Tournament" asp-action="GetCreateForm">Create new tournament here</a>
+    }
+</p>
+
 <table class="table">
     <thead>
         <tr>

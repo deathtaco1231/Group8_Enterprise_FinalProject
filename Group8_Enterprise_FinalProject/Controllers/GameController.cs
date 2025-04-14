@@ -157,6 +157,30 @@ namespace Group8_Enterprise_FinalProject.Controllers
             return RedirectToAction("GetManageForm", "Tournament", new { id = tournament.TournamentId });
         }
 
+        [Authorize(Roles = "Organizer")]
+        [HttpPost("/Games/Edit/{id}")]
+        public IActionResult HandleEditRequest(int id, GameViewModel gameViewModel)
+        {
+            Game game = _tournamentDbContext.Games.Where(g => g.GameId == id).Include(g => g.Teams).ThenInclude(te => te.Players).Include(te => te.Tournament).FirstOrDefault();
+            if (game == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    game.GameDateTime = gameViewModel.ActiveGame.GameDateTime;
+                    _tournamentDbContext.SaveChanges();
+                    return RedirectToAction("GetManageForm", "Tournaments", new { game.TournamentId });
+                }
+                else
+                {
+                    return View("Edit", gameViewModel);
+                }
+            }
+        }
+
         /// <summary>
         /// Returns view with teams found inside game so that organizer can add more registered players to either/both team
         /// </summary>

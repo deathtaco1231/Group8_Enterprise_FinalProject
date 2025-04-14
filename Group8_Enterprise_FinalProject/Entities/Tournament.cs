@@ -34,5 +34,8 @@ namespace Group8_Enterprise_FinalProject.Entities
 
         //Teams list
         public ICollection<Team> Teams { get; } = new List<Team>();
+
+        //Registrations list
+        public ICollection<TournamentRegistration> Registrations { get; } = new List<TournamentRegistration>();
     }
 }

@@ -43,11 +43,14 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var game in games)
+		@foreach (var game in Model.ActiveTournament.Games)
 		{
+			var team1 = game.Teams.Count > 0 ? game.Teams.First().Name : "TBD";
+			var team2 = game.Teams.Count > 1 ? game.Teams.Last().Name : "TBD";
+
 			<tr>
-				<td>@game.Teams.First().Name</td>
-				<td>@game.Teams.Last().Name</td>
+				<td>@team1</td>
+				<td>@team2</td>
 				<td>@game.GameDateTime</td>
 				<td>
 					@if (game.Result == "0-0")
@@ -70,5 +73,7 @@
 		}
 	</tbody>
 </table>
-
-<a asp-controller="Game" asp-action="GetCreateForm" asp-route-id="@Model.ActiveTournament.TournamentId">Add new game to this tournament</a>
+@if (Model.ActiveTournament.NumGames > Model.ActiveTournament.Games.Count)
+{
+	<a asp-controller="Game" asp-action="GetCreateForm" asp-route-id="@Model.ActiveTournament.TournamentId">Add new game to this tournament</a>
+}

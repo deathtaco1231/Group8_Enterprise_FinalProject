@@ -11,7 +11,7 @@ using Group8_Enterprise_FinalProject.Entities;
 namespace Group8_Enterprise_FinalProject.Controllers
 {
     /// <summary>
-    /// Controls the Add, Edit and Delete functions
+    /// Custom controller for account (UNUSED)
     /// </summary>
     public class AccountController : Controller
     {

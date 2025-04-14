@@ -18,17 +18,15 @@ namespace Group8_Enterprise_FinalProject.Entities
         public string? Result { get; set; } = "0-0";
 
         //TournamentId (FK)
-        [Required]
         public int? TournamentId { get; set; }
 
         //Tournament Reference
-        public Tournament Tournament { get; set; } = null!;
+        public Tournament? Tournament { get; set; }
 
-        //Teams list (size must be exactly 2)
+        //Teams list (size must be exactly 2, if size is 0, teams are TBD)
         [Required(ErrorMessage = "Please add the teams")]
-        [MinLength(2, ErrorMessage = "There must be exactly 2 teams")]
         [MaxLength(2, ErrorMessage = "There must be exactly 2 teams")]
-        public ICollection<Team> Teams { get; } = new List<Team>();
+        public ICollection<Team> Teams { get; set; } = new List<Team>();
 
         public bool AreTeamsDistinct()
         {

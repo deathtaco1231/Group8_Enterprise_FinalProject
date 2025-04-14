@@ -1,41 +1,52 @@
-﻿@model List<Tournament>
+﻿@model IEnumerable<Group8_Enterprise_FinalProject.Entities.Tournament>
 
 @{
-    ViewData["Title"] = "All tournaments";
+    ViewData["Title"] = "Tournaments List";
 }
 
-<p>
-    <a asp-controller="Tournament" asp-action="GetCreateForm">Create new tournament</a>
+<h2>Tournaments List</h2>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Game</th>
-                <th>Players/Team</th>
-                <th>Start Date & Time</th>
-                <th>Number of Games</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Tournament tournament in Model)
-            {
-                <tr>
-                    <td>@tournament.Name</td>
-                    <td>@tournament.Game</td>
-                    <td>@tournament.NumPlayersPerTeam</td>
-                    <td>@tournament.StartDateTime</td>
-                    <td>@tournament.NumGames</td>
-					<td>
-                        <a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@tournament.TournamentId">Manage</a>
-                        <span class="px-2">|</span>
-                        <a asp-controller="Tournament" asp-action="GetEditForm" asp-route-id="@tournament.TournamentId">Edit</a>
-                        <span class="px-2">|</span>
-                        <a asp-controller="Tournament" asp-action="GetDeleteForm" asp-route-id="@tournament.TournamentId">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Tournament" asp-action="GetCreateForm">Create new tournament here</a>
+    }
 </p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Game</th>
+            <th>Start Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tournament in Model)
+        {
+            <tr>
+                <td>@tournament.Name</td>
+                <td>@tournament.Game</td>
+                <td>@tournament.StartDateTime.ToString("g")</td>
+                <td>
+                    <!-- 'Manage' is always visible -->
+                    <a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@tournament.TournamentId">Manage</a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @: |
+                        <a asp-controller="Tournament" asp-action="GetEditForm" asp-route-id="@tournament.TournamentId">Edit</a>
+                        @: |
+                        <a asp-controller="Tournament" asp-action="GetDeleteForm" asp-route-id="@tournament.TournamentId">Delete</a>
+                    }
+                    else
+                    {
+                        @: |
+                        <a asp-controller="Tournament" asp-action="Register" asp-route-id="@tournament.TournamentId">Register</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

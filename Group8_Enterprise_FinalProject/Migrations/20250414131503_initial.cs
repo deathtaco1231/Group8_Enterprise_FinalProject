@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Group8_Enterprise_FinalProject.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -183,13 +183,33 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GameDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Result = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TournamentId = table.Column<int>(type: "int", nullable: false)
+                    TournamentId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Games", x => x.GameId);
                     table.ForeignKey(
                         name: "FK_Games_Tournaments_TournamentId",
+                        column: x => x.TournamentId,
+                        principalTable: "Tournaments",
+                        principalColumn: "TournamentId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TournamentRegistrations",
+                columns: table => new
+                {
+                    TournamentRegistrationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TournamentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TournamentRegistrations", x => x.TournamentRegistrationId);
+                    table.ForeignKey(
+                        name: "FK_TournamentRegistrations_Tournaments_TournamentId",
                         column: x => x.TournamentId,
                         principalTable: "Tournaments",
                         principalColumn: "TournamentId",
@@ -264,9 +284,9 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 values: new object[,]
                 {
                     { 1, 1, "Team A", 1 },
-                    { 2, 2, "Team B", 1 },
-                    { 3, 3, "Team C", 1 },
-                    { 4, 3, "Team D", 1 }
+                    { 2, 1, "Team B", 1 },
+                    { 3, 2, "Team C", 1 },
+                    { 4, 2, "Team D", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -354,6 +374,11 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 name: "IX_Teams_TournamentId",
                 table: "Teams",
                 column: "TournamentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TournamentRegistrations_TournamentId",
+                table: "TournamentRegistrations",
+                column: "TournamentId");
         }
 
         /// <inheritdoc />
@@ -376,6 +401,9 @@ namespace Group8_Enterprise_FinalProject.Migrations
 
             migrationBuilder.DropTable(
                 name: "Players");
+
+            migrationBuilder.DropTable(
+                name: "TournamentRegistrations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

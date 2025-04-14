@@ -14,8 +14,7 @@ namespace Group8_Enterprise_FinalProject.Entities
     public class TournamentDbContext : IdentityDbContext<User>
     {
         /// <summary>
-        /// Define a constructor that simply passes the options argument
-        /// up to the base class constuctor
+        /// Construct DB context class with options
         /// </summary>
         /// <param name="options"></param>
         public TournamentDbContext(DbContextOptions options)
@@ -30,6 +29,8 @@ namespace Group8_Enterprise_FinalProject.Entities
         public DbSet<Team> Teams { get; set; }
 
         public DbSet<Player> Players { get; set; }
+
+        public DbSet<TournamentRegistration> TournamentRegistrations { get; set; }
 
 
         /// <summary>
@@ -72,9 +73,9 @@ namespace Group8_Enterprise_FinalProject.Entities
             modelBuilder.Entity<Team>()
                 .HasData(
                     new Team { TeamId = 1, Name = "Team A", GameId = 1, TournamentId = 1 },
-                    new Team { TeamId = 2, Name = "Team B", GameId = 2, TournamentId = 1 },
-                    new Team { TeamId = 3, Name = "Team C", GameId = 3, TournamentId = 1 },
-                    new Team { TeamId = 4, Name = "Team D", GameId = 3, TournamentId = 1 }
+                    new Team { TeamId = 2, Name = "Team B", GameId = 1, TournamentId = 1 },
+                    new Team { TeamId = 3, Name = "Team C", GameId = 2, TournamentId = 1 },
+                    new Team { TeamId = 4, Name = "Team D", GameId = 2, TournamentId = 1 }
                 );
 
             // Seed the database with some initial player data
@@ -101,6 +102,13 @@ namespace Group8_Enterprise_FinalProject.Entities
                     new Player { PlayerId = 19, Name = "Player 19", TeamId = 4 },
                     new Player { PlayerId = 20, Name = "Player 20", TeamId = 4 }
                 );
+
+            // Cascading delete for tournament registrations (forgot to add other cascade deletes for other entities, but remembered for this one lol)
+            modelBuilder.Entity<TournamentRegistration>()
+                .HasOne(tr => tr.Tournament)
+                .WithMany(t => t.Registrations) // Ensure Tournament has this property
+                .HasForeignKey(tr => tr.TournamentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>

@@ -36,7 +36,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                     b.Property<string>("Result")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TournamentId")
+                    b.Property<int?>("TournamentId")
                         .HasColumnType("int");
 
                     b.HasKey("GameId");
@@ -250,21 +250,21 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         new
                         {
                             TeamId = 2,
-                            GameId = 2,
+                            GameId = 1,
                             Name = "Team B",
                             TournamentId = 1
                         },
                         new
                         {
                             TeamId = 3,
-                            GameId = 3,
+                            GameId = 2,
                             Name = "Team C",
                             TournamentId = 1
                         },
                         new
                         {
                             TeamId = 4,
-                            GameId = 3,
+                            GameId = 2,
                             Name = "Team D",
                             TournamentId = 1
                         });
@@ -309,6 +309,32 @@ namespace Group8_Enterprise_FinalProject.Migrations
                             NumPlayersPerTeam = 5,
                             StartDateTime = new DateTime(2025, 4, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.TournamentRegistration", b =>
+                {
+                    b.Property<int>("TournamentRegistrationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TournamentRegistrationId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TournamentRegistrationId");
+
+                    b.HasIndex("TournamentId");
+
+                    b.ToTable("TournamentRegistrations");
                 });
 
             modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.User", b =>
@@ -513,9 +539,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 {
                     b.HasOne("Group8_Enterprise_FinalProject.Entities.Tournament", "Tournament")
                         .WithMany("Games")
-                        .HasForeignKey("TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TournamentId");
 
                     b.Navigation("Tournament");
                 });
@@ -546,6 +570,17 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         .IsRequired();
 
                     b.Navigation("Game");
+
+                    b.Navigation("Tournament");
+                });
+
+            modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.TournamentRegistration", b =>
+                {
+                    b.HasOne("Group8_Enterprise_FinalProject.Entities.Tournament", "Tournament")
+                        .WithMany("Registrations")
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Tournament");
                 });
@@ -614,6 +649,8 @@ namespace Group8_Enterprise_FinalProject.Migrations
             modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.Tournament", b =>
                 {
                     b.Navigation("Games");
+
+                    b.Navigation("Registrations");
 
                     b.Navigation("Teams");
                 });

@@ -17,9 +17,10 @@ namespace Group8_Enterprise_FinalProject.API_s
         private TournamentDbContext _tournamentDbContext;
         private ITournamentManagerService _tournamentManagerService;
 
-        public TournamentsAPIController(TournamentDbContext context)
+        public TournamentsAPIController(TournamentDbContext context, ITournamentManagerService tournamentManagerService)
         {
             _tournamentDbContext = context;
+            _tournamentManagerService = tournamentManagerService;
         }
 
         /// <summary>

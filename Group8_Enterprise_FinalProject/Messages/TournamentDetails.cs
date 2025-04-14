@@ -1,5 +1,8 @@
 ﻿namespace Group8_Enterprise_FinalProject.Messages
 {
+    /// <summary>
+    /// A DTO-style object meant to contain information about a tournament for use in an API
+    /// </summary>
     public class TournamentDetails
     {
         public int TournamentId { get; set; }

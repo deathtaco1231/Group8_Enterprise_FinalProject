@@ -103,6 +103,12 @@ namespace Group8_Enterprise_FinalProject.Entities
                     new Player { PlayerId = 19, Name = "Player 19", TeamId = 4 },
                     new Player { PlayerId = 20, Name = "Player 20", TeamId = 4 }
                 );
+
+            modelBuilder.Entity<TournamentRegistration>()
+                .HasOne(tr => tr.Tournament)
+                .WithMany(t => t.Registrations) // Ensure Tournament has this property
+                .HasForeignKey(tr => tr.TournamentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>

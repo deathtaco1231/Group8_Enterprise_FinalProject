@@ -1,12 +1,23 @@
 ﻿@model GameViewModel
 
 @{
-	ViewData["Title"] = "Manage game";
+    ViewData["Title"] = "Manage game";
 
-	var team1 = Model.ActiveGame.Teams.Count > 0 ? Model.ActiveGame.Teams.First().Name : "TBD";
-	var team2 = Model.ActiveGame.Teams.Count > 1 ? Model.ActiveGame.Teams.Last().Name : "TBD";
-	var team1Players = Model.ActiveGame.Teams.FirstOrDefault()?.Players ?? new List<Player>();
-	var team2Players = Model.ActiveGame.Teams.LastOrDefault()?.Players ?? new List<Player>();
+    // Get team objects
+    var team1 = Model.ActiveGame.Teams.FirstOrDefault(); 
+    // For team2, if there are at least two teams, use the last; otherwise, team2 stays null.
+    var team2 = Model.ActiveGame.Teams.Count > 1 ? Model.ActiveGame.Teams.Last() : null;
+
+    // Derived team names: Use the team's Name if it exists; otherwise, "TBD"
+    var team1Name = team1 != null ? team1.Name : "TBD";
+    var team2Name = team2 != null ? team2.Name : "TBD";
+
+    // Player lists. If a team is null, default to an empty list.
+    var team1Players = team1?.Players ?? new List<Player>();
+    var team2Players = team2?.Players ?? new List<Player>();
+
+    // Get the capacity from the tournament.
+    var capacity = Model.ActiveGame.Tournament.NumPlayersPerTeam;
 }
 
 <h2>Manage your game</h2>
@@ -22,50 +33,86 @@
 <hr />
 
 <h4>
-	Game #@Model.ActiveGame.GameId -@Model.ActiveGame.Tournament.Name-
+    Game #@Model.ActiveGame.GameId - @Model.ActiveGame.Tournament.Name -
 </h4>
 
 <h4>Teams:</h4>
+
+<!-- Team 1 Table -->
 <table class="table table-bordered table-striped">
-	<thead>
-		<tr>
-			<th>@team1</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var player in team1Players)
-		{
-			<tr>
-				<td>@player.Name</td>
-			</tr>
-		}
-	</tbody>
+    <thead>
+        <tr>
+            <th>@team1Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var player in team1Players)
+        {
+            <tr>
+                <td>@player.Name</td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+@if (User.Identity.IsAuthenticated)
+{
+    // Show button for Team1 if either:
+    // No team exists (team1 is null), or he team exists and the current number of players is less than the tournament capacity.
+    if (team1 == null || team1Players.Count < capacity)
+    {
+        // Use 0 as a placehoder if no team exists
+        <a asp-controller="Game"
+           asp-action="AssignPlayer"
+           asp-route-gameId="@Model.ActiveGame.GameId"
+           asp-route-teamId="@(team1 != null ? team1.TeamId : 0)"  
+           class="btn btn-info">
+            Assign Player to @team1Name
+        </a>
+    }
+}
+
 <h4>vs</h4>
+
+<!-- Team 2 Table -->
 <table class="table table-bordered table-striped">
-	<thead>
-		<tr>
-			<th>@team2</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var player in team2Players)
-		{
-			<tr>
-				<td>@player.Name</td>
-			</tr>
-		}
-	</tbody>
+    <thead>
+        <tr>
+            <th>@team2Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var player in team2Players)
+        {
+            <tr>
+                <td>@player.Name</td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (team2 == null || team2Players.Count < capacity)
+    {
+        <a asp-controller="Game"
+           asp-action="AssignPlayer"
+           asp-route-gameId="@Model.ActiveGame.GameId"
+           asp-route-teamId="@(team2 != null ? team2.TeamId : 0)"
+           class="btn btn-info">
+            Assign Player to @team2Name
+        </a>
+    }
+}
 
 <h4>Results:</h4>
 <p>
-	@if (Model.ActiveGame.Result == "0-0")
-	{
-		<span class="text-danger">Not played</span>
-	}
-	else
-	{
-		<span>@Model.ActiveGame.Result - @Model.WinningTeamName</span>
-	}
+    @if (Model.ActiveGame.Result == "0-0")
+    {
+        <span class="text-danger">Not played</span>
+    }
+    else
+    {
+        <span>@Model.ActiveGame.Result - @Model.WinningTeamName</span>
+    }
 </p>

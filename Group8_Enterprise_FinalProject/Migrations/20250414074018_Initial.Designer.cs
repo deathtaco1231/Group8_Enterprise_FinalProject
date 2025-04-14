@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Group8_Enterprise_FinalProject.Migrations
 {
     [DbContext(typeof(TournamentDbContext))]
-    [Migration("20250413142712_initial")]
-    partial class initial
+    [Migration("20250414074018_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                     b.Property<string>("Result")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TournamentId")
+                    b.Property<int?>("TournamentId")
                         .HasColumnType("int");
 
                     b.HasKey("GameId");
@@ -314,6 +314,32 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.TournamentRegistration", b =>
+                {
+                    b.Property<int>("TournamentRegistrationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TournamentRegistrationId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TournamentRegistrationId");
+
+                    b.HasIndex("TournamentId");
+
+                    b.ToTable("TournamentRegistrations");
+                });
+
             modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -516,9 +542,7 @@ namespace Group8_Enterprise_FinalProject.Migrations
                 {
                     b.HasOne("Group8_Enterprise_FinalProject.Entities.Tournament", "Tournament")
                         .WithMany("Games")
-                        .HasForeignKey("TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TournamentId");
 
                     b.Navigation("Tournament");
                 });
@@ -549,6 +573,17 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         .IsRequired();
 
                     b.Navigation("Game");
+
+                    b.Navigation("Tournament");
+                });
+
+            modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.TournamentRegistration", b =>
+                {
+                    b.HasOne("Group8_Enterprise_FinalProject.Entities.Tournament", "Tournament")
+                        .WithMany("Registrations")
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Tournament");
                 });
@@ -617,6 +652,8 @@ namespace Group8_Enterprise_FinalProject.Migrations
             modelBuilder.Entity("Group8_Enterprise_FinalProject.Entities.Tournament", b =>
                 {
                     b.Navigation("Games");
+
+                    b.Navigation("Registrations");
 
                     b.Navigation("Teams");
                 });

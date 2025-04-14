@@ -1,7 +1,7 @@
 ﻿namespace Group8_Enterprise_FinalProject.Messages
 {
     /// <summary>
-    /// Data Transfer Object for home route for API callers providing necessary config information, in this case the SPA app and Python client
+    /// Data Transfer Object for home route for API callers providing necessary config information, in this case the Python client
     /// </summary>
     public class TournamentsApiHomeDTO
     {

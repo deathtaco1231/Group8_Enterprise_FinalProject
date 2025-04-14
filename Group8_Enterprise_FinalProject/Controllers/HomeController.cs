@@ -15,7 +15,7 @@ namespace Group8_Enterprise_FinalProject.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("GetAllTournaments", "Tournament");
         }
 
         public IActionResult Privacy()

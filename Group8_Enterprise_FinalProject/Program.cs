@@ -18,12 +18,20 @@ builder.Services.AddHangfire(config =>
     config.UseSqlServerStorage(hangfireConnStr);
 });
 
+// Adding our custom service as a scoped service here
 builder.Services.AddScoped<ITournamentManagerService, TournamentManagerService>();
 
 builder.Services.AddRouting(options =>
 {
     options.LowercaseUrls = true;
     options.AppendTrailingSlash = true;
+});
+
+// Setting up paths to vies for logging in and access denied, which user will be sent to for unauthorized actions
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/LogIn";          
+    options.AccessDeniedPath = "/Account/AccessDenied"; 
 });
 
 // Add services to the container.
@@ -36,10 +44,11 @@ builder.Services.AddCors(options => {
     });
 });
 
+// Getting our main database string and adding it as a context here
 var connStr = builder.Configuration.GetConnectionString("ETourneyProDB");
 builder.Services.AddDbContext<TournamentDbContext>(options => options.UseSqlServer(connStr));
 
-// Code to setup identity services, requirements for passwords
+// Code to setup identity services, requirements for passwords (SAME AS WHAT WE DID IN OUR QUIZZES AND EXAMPLE CODE IN CLASS)
 builder.Services.AddIdentity<User, IdentityRole>(options => {
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = true;
@@ -71,7 +80,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Tournament}/{action=GetAllTournaments}/{id?}")
     .WithStaticAssets();
 
 

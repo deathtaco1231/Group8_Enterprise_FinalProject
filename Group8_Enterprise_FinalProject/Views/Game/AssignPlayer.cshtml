@@ -1,0 +1,25 @@
+﻿@model Group8_Enterprise_FinalProject.ViewModels.TeamPlayerAssignmentViewModel
+
+@{
+    ViewData["Title"] = "Assign Player to Team";
+}
+
+<h2>Assign Player to Team</h2>
+
+<form asp-action="AssignPlayer" method="post">
+
+    <input type="hidden" asp-for="GameId" />
+    <input type="hidden" asp-for="TeamId" />
+    <input type="hidden" asp-for="TournamentId" />
+
+    <div class="form-group">
+        <label asp-for="SelectedRegistrationId">Select a registered player:</label>
+        <select asp-for="SelectedRegistrationId" class="form-control"
+                asp-items="@(new SelectList(Model.AvailableRegistrations, "TournamentRegistrationId", "Name"))">
+            <option value="">-- Select a player --</option>
+        </select>
+        <span asp-validation-for="SelectedRegistrationId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Assign Player</button>
+</form>

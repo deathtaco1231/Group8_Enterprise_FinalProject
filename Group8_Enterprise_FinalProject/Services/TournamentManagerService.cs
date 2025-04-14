@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Diagnostics.Metrics;
-using System.Net.Mail;
+﻿using Hangfire;
+using System;
 using System.Net;
-using Hangfire;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.IO;
+using System.Net.Mail;
 using Group8_Enterprise_FinalProject.Entities;
 
 namespace Group8_Enterprise_FinalProject.Services
@@ -14,14 +11,14 @@ namespace Group8_Enterprise_FinalProject.Services
         private const string fromAddress = "etourneypro@gmail.com";
         private const string appPassword = "pesl opgp dbcg tsdl";
 
-        /// <summary>
-        /// Uses a SMTP client to send emails with party invite information
-        /// using the parameters passed from the method caller
-        /// (Assumes valid address since Invite creation performs this validation before it is used here)
-        /// </summary>
-        /// <param name="toAddress"></param>
-        /// <param name="subject"></param>
-        /// <param name="body"></param>
+        private readonly IBackgroundJobClient _backgroundJobClient;
+
+        // Inject IBackgroundJobClient via the constructor.
+        public TournamentManagerService(IBackgroundJobClient backgroundJobClient)
+        {
+            _backgroundJobClient = backgroundJobClient;
+        }
+
         public void SendPlayerEmail(string toAddress, string subject, string body)
         {
             var smtpClient = new SmtpClient("smtp.gmail.com")
@@ -45,26 +42,19 @@ namespace Group8_Enterprise_FinalProject.Services
             smtpClient.Send(mailMessage);
         }
 
-        /// <summary>
-        /// Schedules a task to send an email to the player passed in the parameters
-        /// with a reminder of the game they are registered to play. 
-        /// </summary>
-        /// <param name="minutesDiff">Differential in minutes to send email from game scheduled time.
-        /// Use negative value to send n minutes BEFORE game time.</param>
         public void SendPlayerEmailWithDelay(string toAddress, string subject, string body, DateTime gameTime, double minutesDiff)
         {
-            // Determine time to send email based on time passed in as parameter
+            // Determine when to send the email.
             var scheduledSendTime = gameTime.AddMinutes(minutesDiff);
             var delay = scheduledSendTime - DateTime.Now;
 
-            // Ensure the delay is not negative, if so send immediately (we might change this to don't send at all)
             if (delay < TimeSpan.Zero)
             {
                 delay = TimeSpan.Zero;
             }
 
-            // Schedule the email using Hangfire
-            BackgroundJob.Schedule(() => SendPlayerEmail(toAddress, subject, body), delay);
+            // Use the injected instance to schedule the email.
+            _backgroundJobClient.Schedule(() => SendPlayerEmail(toAddress, subject, body), delay);
         }
 
         /// <summary>
@@ -75,18 +65,28 @@ namespace Group8_Enterprise_FinalProject.Services
         /// <param name="gameName"></param>
         /// <param name="gameDate"></param>
         /// <returns></returns>
-        public string FormatRegistrationEmail(string playerName, string tournamentName, int tournamentId, string gameName, DateTime gameDate)
+        public string FormatRegistrationEmail(string playerName, string tournamentName, int tournamentId, string gameName)
         {
             // Subject line is handled by caller, this method only concerns the body text with HTML wrapping (basically auto-formatting for caller)
             string body = $@"
                     <h1>Hello 
             {playerName}, </h1><p>We wanted to let you know that your registration for the {tournamentName} tournament has been confirmed, and you are scheduled to play a game!</p>
                     <p>Please click <a href=""https://localhost:5001/Tournaments/
-            {tournamentId}"">here</a> for more details about the tournament. You will be playing {gameName} at {gameDate.ToString("d")}.</p>
+            {tournamentId}"">here</a> for more details about the tournament. You will be playing {gameName}. You will receive a notice when your scheduled games are about to begin.</p>
                     <p>Sincerely,<br>ETourneyPro</p>";
 
             return body;
         }
+
+        /// <summary>
+        /// Formats email sent to players with a reminder of the game they are registered to play
+        /// </summary>
+        /// <param name="playerName"></param>
+        /// <param name="tournamentName"></param>
+        /// <param name="gameId"></param>
+        /// <param name="gameName"></param>
+        /// <param name="inverseTimeDiff"></param>
+        /// <returns></returns>
         public string FormatReminderEmail(string playerName, string tournamentName, int gameId, string gameName, double inverseTimeDiff)
         {
             // Subject line is handled by caller, this method only concerns the body text with HTML wrapping (basically auto-formatting for caller)

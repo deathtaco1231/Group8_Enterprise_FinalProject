@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Group8_Enterprise_FinalProject.Models;
 using Group8_Enterprise_FinalProject.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Group8_Enterprise_FinalProject.Controllers
 {
@@ -18,15 +19,28 @@ namespace Group8_Enterprise_FinalProject.Controllers
         }
 
         // GET: All Tournaments
+        /// <summary>
+        /// Simple list of tournaments returned from database (if any exist)
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("/Tournaments")]
         public IActionResult GetAllTournaments()
         {
             List<Tournament> tournaments = _tournamentDbContext.Tournaments.Include(to => to.Games).ThenInclude(ga => ga.Teams).ToList();
+            if (tournaments == null || tournaments.Count == 0)
+            {
+                return NoContent();
+            }
 
             return View("List", tournaments);
         }
 
         // GET: Tournament Details
+        /// <summary>
+        /// Returns view with details of tournament. Game details are accesed through this for each tournament.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("/Tournaments/{id}")]
         public IActionResult GetManageForm(int id)
         {
@@ -47,6 +61,11 @@ namespace Group8_Enterprise_FinalProject.Controllers
         }
 
         // GET: Create Tournament
+        /// <summary>
+        /// Returns view with empty model for creating a brand new tournament.
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Organizer")]
         [HttpGet("/Tournaments/Create")]
         public IActionResult GetCreateForm()
         {
@@ -59,6 +78,12 @@ namespace Group8_Enterprise_FinalProject.Controllers
         }
 
         // GET: Edit Tournament
+        /// <summary>
+        /// Returns view with tournament details for editing. The tournament is passed as a parameter to the view.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Organizer")]
         [HttpGet("/Tournaments/Edit/{id}")]
         public IActionResult GetEditForm(int id)
         {
@@ -79,6 +104,12 @@ namespace Group8_Enterprise_FinalProject.Controllers
         }
 
         // GET: Delete Tournament
+        /// <summary>
+        /// Returns view with tournament details for deleting. The tournament is passed as a parameter to the view.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Organizer")]
         [HttpGet("/Tournaments/Delete/{id}")]
         public IActionResult GetDeleteForm(int id)
         {
@@ -91,6 +122,12 @@ namespace Group8_Enterprise_FinalProject.Controllers
         }
 
         // POST: Create Tournament
+        /// <summary>
+        /// Handles a creation request after user submits (completed) creation form, or rejects it if invalid.
+        /// </summary>
+        /// <param name="tournamentViewModel"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Organizer")]
         [HttpPost("/Tournaments/Create")]
         public IActionResult CreateNewTournament(TournamentViewModel tournamentViewModel)
         {
@@ -107,6 +144,13 @@ namespace Group8_Enterprise_FinalProject.Controllers
         }
 
         // POST: Edit Tournament
+        /// <summary>
+        /// Handles an edit request after user submits (completed) edit form, or rejects it if invalid.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tournamentViewModel"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Organizer")]
         [HttpPost("/Tournaments/Edit/{id}")]
         public IActionResult HandleEditRequest(int id, TournamentViewModel tournamentViewModel)
         {
@@ -135,6 +179,12 @@ namespace Group8_Enterprise_FinalProject.Controllers
         }
 
         // POST: Delete Tournament
+        /// <summary>
+        /// Deletes the tournament of ID value passed as parameter (if it exists within the database)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Organizer")]
         [HttpPost("/Tournaments/Delete/{id}")]
         public IActionResult HandleDeleteRequest(int id)
         {
@@ -149,6 +199,56 @@ namespace Group8_Enterprise_FinalProject.Controllers
                 _tournamentDbContext.SaveChanges();
                 return RedirectToAction("GetAllTournaments");
             }
+        }
+
+        /// <summary>
+        /// Returns the Registration form for a tournament of ID value passed as parameter
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/Tournaments/{id}/Register")]
+        public IActionResult Register(int id)
+        {
+            // 'id' is the TournamentId.
+            var viewModel = new TournamentRegistrationViewModel
+            {
+                TournamentId = id
+            };
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Accepts and checks the registration form from the user.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("/Tournaments/{id}/Register")]
+        public IActionResult Register(TournamentRegistrationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Map the view model to the domain entity
+            var registration = new TournamentRegistration
+            {
+                Name = model.Name,
+                Email = model.Email,
+                TournamentId = model.TournamentId
+            };
+
+            _tournamentDbContext.TournamentRegistrations.Add(registration);
+            _tournamentDbContext.SaveChanges();
+
+            Tournament? tmpTournament = _tournamentDbContext.Tournaments.Where(to => to.TournamentId == model.TournamentId).FirstOrDefault();
+
+            string emailBody = _tournamentManagerService.FormatRegistrationEmail(model.Name, tmpTournament.Name, model.TournamentId, tmpTournament.Game);
+            string subject = "Registration for " + tmpTournament.Name + " Tournament";
+            string email = model.Email;
+            _tournamentManagerService.SendPlayerEmail(email, subject, emailBody);
+
+            return Redirect($"/Tournaments/{model.TournamentId}");
         }
 
     }

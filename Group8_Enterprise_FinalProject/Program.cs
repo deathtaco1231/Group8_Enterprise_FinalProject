@@ -67,9 +67,13 @@ app.UseCors("AllowTournamentClients");
 app.UseAuthentication(); // Using authentication (added BEFORE authorization)
 app.UseAuthorization();
 
+app.MapStaticAssets();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}")
+    .WithStaticAssets();
+
 
 // Calling static method to create Admin (Organizer) user
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();

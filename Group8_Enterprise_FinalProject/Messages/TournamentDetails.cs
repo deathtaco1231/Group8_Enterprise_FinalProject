@@ -1,12 +1,13 @@
-﻿namespace PA3_EnterpriseAppDev_JulianCumming.Messages
+﻿namespace Group8_Enterprise_FinalProject.Messages
 {
-    /// <summary>
-    /// Class for holding necessary details of quote (stripped down slightly for associated tag names only) for sending to client,
-    /// and URL for quote's ID route
-    /// </summary>
     public class TournamentDetails
     {
-        public int TournamentID { get; set; }
-
+        public int TournamentId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Game { get; set; } = string.Empty;
+        public int NumPlayersPerTeam { get; set; }
+        public DateTime StartDateTime { get; set; }
+        public int NumGames { get; set; }
+        public string? Url { get; set; }
     }
 }

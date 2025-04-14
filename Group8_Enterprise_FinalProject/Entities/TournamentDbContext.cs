@@ -31,6 +31,8 @@ namespace Group8_Enterprise_FinalProject.Entities
 
         public DbSet<Player> Players { get; set; }
 
+        public DbSet<TournamentRegistration> TournamentRegistrations { get; set; }
+
 
         /// <summary>
         /// Add some records upon build

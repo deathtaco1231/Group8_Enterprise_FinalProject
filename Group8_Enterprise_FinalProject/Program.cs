@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Group8_Enterprise_FinalProject.Models;
 using Group8_Enterprise_FinalProject.Entities;
+using Group8_Enterprise_FinalProject.Services;
 using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ builder.Services.AddHangfire(config =>
 {
     config.UseSqlServerStorage(hangfireConnStr);
 });
+
+builder.Services.AddScoped<ITournamentManagerService, TournamentManagerService>();
 
 builder.Services.AddRouting(options =>
 {

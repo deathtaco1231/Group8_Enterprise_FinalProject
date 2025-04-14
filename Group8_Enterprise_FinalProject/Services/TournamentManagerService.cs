@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using System.IO;
 using Group8_Enterprise_FinalProject.Entities;
 
-namespace PA2_JulianCumming_EnterpriseAppDev.Services
+namespace Group8_Enterprise_FinalProject.Services
 {
     public class TournamentManagerService : ITournamentManagerService
     {

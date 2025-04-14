@@ -2,14 +2,28 @@
 
 @{
     ViewData["Title"] = "Edit game";
+
+    // Ensure ActiveGame.Teams exists and contains at least 2 teams.
+    if (Model.ActiveGame.Teams == null)
+    {
+        throw new Exception("ActiveGame.Teams is null.");
+    }
+    while (Model.ActiveGame.Teams.Count < 2)
+    {
+        Model.ActiveGame.Teams.Add(new Team { Name = "TBD" });
+    }
+
+    var scores = Model.ActiveGame.Result.Split('-');
+    var team1Score = (scores.Length > 0) ? scores[0] : "0";
+    var team2Score = (scores.Length > 1) ? scores[1] : "0";
 }
 
 <form asp-controller="Game" asp-action="HandleEditRequest" asp-route-id="@Model.ActiveGame.GameId" method="post" enctype="application/x-www-form-urlencoded">
     <div class="text-danger" asp-validation-summary="All"></div>
 
     <div class="form-group">
-        <label asp-for="ActiveGame.GameDateTime">Game Date & Time:</label>
-        <input type="datetime" asp-for="ActiveGame.GameDateTime" class="form-control" value="@Model.ActiveGame.GameDateTime.ToString("d")" />
+        <label asp-for="ActiveGame.GameDateTime">Game Date &amp; Time:</label>
+        <input type="datetime" asp-for="ActiveGame.GameDateTime" class="form-control" />
     </div>
 
     <div class="form-group">
@@ -18,8 +32,18 @@
     </div>
 
     <div class="form-group">
+        <label>Team 1 Score:</label>
+        <input type="number" name="Team1Score" value="@team1Score" class="form-control" />
+    </div>
+
+    <div class="form-group">
         <label asp-for="ActiveGame.Teams.Last().Name">Team 2 Name:</label>
         <input type="text" asp-for="ActiveGame.Teams.Last().Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Team 2 Score:</label>
+        <input type="number" name="Team2Score" value="@team2Score" class="form-control" />
     </div>
 
     <input type="hidden" asp-for="ActiveGame.GameId" />

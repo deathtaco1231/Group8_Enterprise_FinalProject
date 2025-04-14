@@ -72,9 +72,9 @@ namespace Group8_Enterprise_FinalProject.Entities
             modelBuilder.Entity<Team>()
                 .HasData(
                     new Team { TeamId = 1, Name = "Team A", GameId = 1, TournamentId = 1 },
-                    new Team { TeamId = 2, Name = "Team B", GameId = 2, TournamentId = 1 },
-                    new Team { TeamId = 3, Name = "Team C", GameId = 3, TournamentId = 1 },
-                    new Team { TeamId = 4, Name = "Team D", GameId = 3, TournamentId = 1 }
+                    new Team { TeamId = 2, Name = "Team B", GameId = 1, TournamentId = 1 },
+                    new Team { TeamId = 3, Name = "Team C", GameId = 2, TournamentId = 1 },
+                    new Team { TeamId = 4, Name = "Team D", GameId = 2, TournamentId = 1 }
                 );
 
             // Seed the database with some initial player data

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Group8_Enterprise_FinalProject.Migrations
 {
     [DbContext(typeof(TournamentDbContext))]
-    [Migration("20250413021032_Initial")]
-    partial class Initial
+    [Migration("20250413142712_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -253,21 +253,21 @@ namespace Group8_Enterprise_FinalProject.Migrations
                         new
                         {
                             TeamId = 2,
-                            GameId = 2,
+                            GameId = 1,
                             Name = "Team B",
                             TournamentId = 1
                         },
                         new
                         {
                             TeamId = 3,
-                            GameId = 3,
+                            GameId = 2,
                             Name = "Team C",
                             TournamentId = 1
                         },
                         new
                         {
                             TeamId = 4,
-                            GameId = 3,
+                            GameId = 2,
                             Name = "Team D",
                             TournamentId = 1
                         });

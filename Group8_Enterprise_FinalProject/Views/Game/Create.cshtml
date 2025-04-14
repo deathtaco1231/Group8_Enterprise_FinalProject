@@ -2,9 +2,19 @@
 
 @{
 	ViewData["Title"] = "Create a game";
+
+	// Ensure ActiveGame.Teams exists and contains at least 2 teams.
+	if (Model.ActiveGame.Teams == null)
+	{
+		throw new Exception("ActiveGame.Teams is null.");
+	}
+	while (Model.ActiveGame.Teams.Count < 2)
+	{
+		Model.ActiveGame.Teams.Add(new Team { Name = "TBD" });
+	}
 }
 
-<form asp-controller="Game" asp-action="CreateNewGame" method="post" enctype="application/x-www-form-urlencoded">
+<form asp-controller="Game" asp-action="CreateNewGame" asp-route-id=@Model.ActiveGame.TournamentId method="post" enctype="application/x-www-form-urlencoded">
 	<div class="text-danger" asp-validation-summary="All">
 
 		<div class="form-group">

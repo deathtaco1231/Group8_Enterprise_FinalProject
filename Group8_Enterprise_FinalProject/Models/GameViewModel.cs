@@ -6,8 +6,6 @@ namespace Group8_Enterprise_FinalProject.Models
     {
         public Game? ActiveGame { get; set; }
 
-        public ICollection<Team>? Teams { get; set; }
-
         public string? WinningTeamName { get; set; }
     }
 }

@@ -1,53 +1,51 @@
-﻿@model GameViewModel
+﻿@model EditGameViewModel
 
 @{
     ViewData["Title"] = "Edit game";
-
-    // Ensure ActiveGame.Teams exists and contains at least 2 teams.
-    if (Model.ActiveGame.Teams == null)
-    {
-        throw new Exception("ActiveGame.Teams is null.");
-    }
-    while (Model.ActiveGame.Teams.Count < 2)
-    {
-        Model.ActiveGame.Teams.Add(new Team { Name = "TBD" });
-    }
-
-    var scores = Model.ActiveGame.Result.Split('-');
-    var team1Score = (scores.Length > 0) ? scores[0] : "0";
-    var team2Score = (scores.Length > 1) ? scores[1] : "0";
 }
 
-<form asp-controller="Game" asp-action="HandleEditRequest" asp-route-id="@Model.ActiveGame.GameId" method="post" enctype="application/x-www-form-urlencoded">
+<form asp-controller="Game"
+      asp-action="HandleEditRequest"
+      asp-route-id="@Model.GameId"
+      method="post"
+      enctype="application/x-www-form-urlencoded">
     <div class="text-danger" asp-validation-summary="All"></div>
 
+    <input type="hidden" asp-for="GameId" />
+    <input type="hidden" asp-for="TournamentId" />
+
     <div class="form-group">
-        <label asp-for="ActiveGame.GameDateTime">Game Date &amp; Time:</label>
-        <input type="datetime-local" asp-for="ActiveGame.GameDateTime" class="form-control" value="@Model.ActiveGame.GameDateTime.ToString("yyyy-MM-ddTHH:mm")" />
+        <label asp-for="GameDateTime"></label>
+        <input type="datetime-local" asp-for="GameDateTime" class="form-control"
+               value="@Model.GameDateTime.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="GameDateTime" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="ActiveGame.Teams.First().Name">Team 1 Name:</label>
-        <input type="text" asp-for="ActiveGame.Teams.First().Name" class="form-control" />
+        <label asp-for="Team1Name"></label>
+        <input type="text" asp-for="Team1Name" class="form-control" />
+        <span asp-validation-for="Team1Name" class="text-danger"></span>
     </div>
 
+    <div class="form-group">
+        <label asp-for="Team2Name"></label>
+        <input type="text" asp-for="Team2Name" class="form-control" />
+        <span asp-validation-for="Team2Name" class="text-danger"></span>
+    </div>
+
+    <!-- Optionally, include inputs for scores -->
     <div class="form-group">
         <label>Team 1 Score:</label>
-        <input type="number" name="Team1Score" value="@team1Score" class="form-control" />
+        <input type="number" asp-for="Team1Score" class="form-control" />
     </div>
-
-    <div class="form-group">
-        <label asp-for="ActiveGame.Teams.Last().Name">Team 2 Name:</label>
-        <input type="text" asp-for="ActiveGame.Teams.Last().Name" class="form-control" />
-    </div>
-
     <div class="form-group">
         <label>Team 2 Score:</label>
-        <input type="number" name="Team2Score" value="@team2Score" class="form-control" />
+        <input type="number" asp-for="Team2Score" class="form-control" />
     </div>
 
-    <input type="hidden" asp-for="ActiveGame.GameId" />
-
     <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@Model.ActiveGame.TournamentId" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="Tournament"
+       asp-action="GetManageForm"
+       asp-route-id="@Model.TournamentId"
+       class="btn btn-secondary">Cancel</a>
 </form>

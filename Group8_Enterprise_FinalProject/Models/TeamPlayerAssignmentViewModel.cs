@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Group8_Enterprise_FinalProject.Entities;
 
-namespace Group8_Enterprise_FinalProject.ViewModels
+namespace Group8_Enterprise_FinalProject.Models
 {
     public class TeamPlayerAssignmentViewModel
     {

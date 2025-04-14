@@ -1,7 +1,6 @@
 ﻿using Group8_Enterprise_FinalProject.Entities;
 using Group8_Enterprise_FinalProject.Models;
 using Group8_Enterprise_FinalProject.Services;
-using Group8_Enterprise_FinalProject.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -60,10 +59,19 @@ namespace Group8_Enterprise_FinalProject.Controllers
             }
             else
             {
-                GameViewModel gameViewModel = new GameViewModel()
+                var scores = game.Result.Split('-');
+                var team1Score = (scores.Length > 0) ? scores[0] : "0";
+                var team2Score = (scores.Length > 1) ? scores[1] : "0";
+
+                EditGameViewModel gameViewModel = new EditGameViewModel()
                 {
-                    ActiveGame = game,
-                    WinningTeamName = game.GetWinningTeam() != null ? game.Teams.FirstOrDefault(t => t.TeamId == game.GetWinningTeam()).Name : "TBD"
+                    GameId = game.GameId,
+                    GameDateTime = game.GameDateTime,
+                    Team1Name = game.Teams.First().Name,
+                    Team1Score = team1Score,
+                    Team2Name = game.Teams.Last().Name,
+                    Team2Score = team2Score,
+                    TournamentId = game.TournamentId.Value           
                 };
 
                 return View("Edit", gameViewModel);
@@ -157,28 +165,54 @@ namespace Group8_Enterprise_FinalProject.Controllers
             return RedirectToAction("GetManageForm", "Tournament", new { id = tournament.TournamentId });
         }
 
+        /// <summary>
+        /// Verifies the validity of the edit form and updates game in database if valid.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Organizer")]
         [HttpPost("/Games/Edit/{id}")]
-        public IActionResult HandleEditRequest(int id, GameViewModel gameViewModel)
+        public IActionResult HandleEditRequest(int id, EditGameViewModel model)
         {
-            Game game = _tournamentDbContext.Games.Where(g => g.GameId == id).Include(g => g.Teams).ThenInclude(te => te.Players).Include(te => te.Tournament).FirstOrDefault();
+            // Load the game from the database with its teams.
+            Game game = _tournamentDbContext.Games
+                .Where(g => g.GameId == id)
+                .Include(g => g.Teams)
+                .Include(g => g.Tournament)
+                .FirstOrDefault();
             if (game == null)
             {
                 return NotFound();
             }
-            else
+
+            if (!ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                return View("Edit", model);
+            }
+
+            // Update only the editable properties.
+            game.GameDateTime = model.GameDateTime;
+
+            // Make sure there are two teams (if not, handle accordingly)
+            if (game.Teams.Count < 2)
+            {
+                // Add missing team(s) if needed.
+                while (game.Teams.Count < 2)
                 {
-                    game.GameDateTime = gameViewModel.ActiveGame.GameDateTime;
-                    _tournamentDbContext.SaveChanges();
-                    return RedirectToAction("GetManageForm", "Tournaments", new { game.TournamentId });
-                }
-                else
-                {
-                    return View("Edit", gameViewModel);
+                    game.Teams.Add(new Team { Name = "TBD", TournamentId = game.TournamentId.Value });
                 }
             }
+            else
+            {
+                // Update team names.
+                var teamList = game.Teams.ToList();
+                teamList[0].Name = model.Team1Name;
+                teamList[1].Name = model.Team2Name;
+            }
+
+            _tournamentDbContext.SaveChanges();
+            return Redirect($"/Tournaments/{model.TournamentId}");
         }
 
         /// <summary>

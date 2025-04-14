@@ -268,5 +268,34 @@ namespace Group8_Enterprise_FinalProject.Controllers
 
             return RedirectToAction("GetManageForm", "Game", new { id = model.GameId });
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Organizer")]
+        [HttpPost("Game/{id}/Delete")]
+        public IActionResult HandleDeleteRequest(int id)
+        {
+            // Retrieve the game including its related teams (for cascade delete). Probably not necessary for ALL includes, but we're doing it on all for consistency
+            var game = _tournamentDbContext.Games
+                        .Include(g => g.Teams)
+                        .ThenInclude(t => t.Players)
+                        .Include(g => g.Tournament)
+                        .FirstOrDefault(g => g.GameId == id);
+
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            // Removing game from database
+            _tournamentDbContext.Games.Remove(game);
+            _tournamentDbContext.SaveChanges();
+
+            // Redirect back to the tournament management view for the associated tournament
+            return RedirectToAction("GetManageForm", "Tournament", new { id = game.Tournament.TournamentId });
+        }
     }
 }

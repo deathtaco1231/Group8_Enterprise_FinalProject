@@ -73,5 +73,7 @@
 		}
 	</tbody>
 </table>
-
-<a asp-controller="Game" asp-action="GetCreateForm" asp-route-id="@Model.ActiveTournament.TournamentId">Add new game to this tournament</a>
+@if (Model.ActiveTournament.NumGames > Model.ActiveTournament.Games.Count)
+{
+	<a asp-controller="Game" asp-action="GetCreateForm" asp-route-id="@Model.ActiveTournament.TournamentId">Add new game to this tournament</a>
+}

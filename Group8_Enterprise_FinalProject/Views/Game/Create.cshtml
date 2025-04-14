@@ -1,38 +1,41 @@
-﻿@model GameViewModel
+﻿@model Group8_Enterprise_FinalProject.ViewModels.CreateGameViewModel
 
 @{
-	ViewData["Title"] = "Create a game";
-
-	// Ensure ActiveGame.Teams exists and contains at least 2 teams.
-	if (Model.ActiveGame.Teams == null)
-	{
-		throw new Exception("ActiveGame.Teams is null.");
-	}
-	while (Model.ActiveGame.Teams.Count < 2)
-	{
-		Model.ActiveGame.Teams.Add(new Team { Name = "TBD" });
-	}
+    ViewData["Title"] = "Create a Game";
 }
 
-<form asp-controller="Game" asp-action="CreateNewGame" asp-route-id=@Model.ActiveGame.TournamentId method="post" enctype="application/x-www-form-urlencoded">
-	<div class="text-danger" asp-validation-summary="All">
+<form asp-controller="Game"
+      asp-action="CreateNewGame"
+      asp-route-id="@Model.TournamentId"
+      method="post"
+      enctype="application/x-www-form-urlencoded">
+    <div class="text-danger" asp-validation-summary="All"></div>
 
-		<div class="form-group">
-			<label asp-for="ActiveGame.GameDateTime">Game Date & Time:</label>
-			<input type="datetime-local" asp-for="ActiveGame.GameDateTime" class="form-control" value="@Model.ActiveGame.GameDateTime.ToString("yyyy-MM-ddTHH:mm")" />
-		</div>
+    <!-- Include hidden field for TournamentId -->
+    <input type="hidden" asp-for="TournamentId" />
 
-		<div class="form-group">
-			<label asp-for="ActiveGame.Teams.First().Name">Team 1 Name:</label>
-			<input type="text" asp-for="ActiveGame.Teams.First().Name" class="form-control" />
-		</div>
+    <div class="form-group">
+        <label asp-for="GameDateTime"></label>
+        <input type="datetime-local" asp-for="GameDateTime" class="form-control"
+               value="@Model.GameDateTime.ToString("d")" />
+        <span asp-validation-for="GameDateTime" class="text-danger"></span>
+    </div>
 
-		<div class="form-group">
-			<label asp-for="ActiveGame.Teams.Last().Name">Team 2 Name:</label>
-			<input type="text" asp-for="ActiveGame.Teams.Last().Name" class="form-control" />
-		</div>
-	</div>
+    <div class="form-group">
+        <label asp-for="Team1Name"></label>
+        <input type="text" asp-for="Team1Name" class="form-control" />
+        <span asp-validation-for="Team1Name" class="text-danger"></span>
+    </div>
 
-	<button type="submit" class="btn btn-primary">Add</button>
-	<a asp-controller="Tournament" asp-action="GetManageForm" asp-route-id="@Model.ActiveGame.TournamentId" class="btn btn-secondary">Cancel</a>
+    <div class="form-group">
+        <label asp-for="Team2Name"></label>
+        <input type="text" asp-for="Team2Name" class="form-control" />
+        <span asp-validation-for="Team2Name" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Game</button>
+    <a asp-controller="Tournament"
+       asp-action="GetManageForm"
+       asp-route-id="@Model.TournamentId"
+       class="btn btn-secondary">Cancel</a>
 </form>

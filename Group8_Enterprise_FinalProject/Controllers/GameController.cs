@@ -90,65 +90,71 @@ namespace Group8_Enterprise_FinalProject.Controllers
             }
         }
 
-        /// <summary>
-        /// Returns the view containing form to create a new game 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        // GET: /Tournaments/{id}/Games/Create
         [Authorize(Roles = "Organizer")]
         [HttpGet("/Tournaments/{id}/Games/Create")]
         public IActionResult GetCreateForm(int id)
         {
-            Tournament tournament = _tournamentDbContext.Tournaments.Where(to => to.TournamentId == id).Include(to => to.Games).ThenInclude(ga => ga.Teams).FirstOrDefault();
+            Tournament tournament = _tournamentDbContext.Tournaments
+                .Where(to => to.TournamentId == id)
+                .Include(to => to.Games)
+                .ThenInclude(ga => ga.Teams)
+                .FirstOrDefault();
             if (tournament == null)
             {
                 return NotFound();
             }
-            GameViewModel gameViewModel = new GameViewModel
+
+            var viewModel = new CreateGameViewModel
             {
-                ActiveGame = new Game(),
-                WinningTeamName = "TBD"
+                TournamentId = tournament.TournamentId,
+                GameDateTime = DateTime.Now,
+                Team1Name = string.Empty, // optionally default to "TBD" or empty
+                Team2Name = string.Empty
             };
 
-
-            gameViewModel.ActiveGame.GameDateTime = DateTime.Now;
-            gameViewModel.ActiveGame.Tournament = tournament;
-            gameViewModel.ActiveGame.TournamentId = tournament.TournamentId;
-
-            return View("Create", gameViewModel);
+            return View("Create", viewModel);
         }
 
-        /// <summary>
-        /// Performs the creation of the new game, adding to database
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="gameViewModel"></param>
-        /// <returns></returns>
+        // POST: /Tournaments/{id}/Games/Create
         [Authorize(Roles = "Organizer")]
         [HttpPost("/Tournaments/{id}/Games/Create")]
-        public IActionResult CreateNewGame(int id, GameViewModel gameViewModel)
+        public IActionResult CreateNewGame(int id, CreateGameViewModel model)
         {
-            Tournament tournament = _tournamentDbContext.Tournaments.Where(to => to.TournamentId == id).Include(to => to.Games).ThenInclude(ga => ga.Teams).FirstOrDefault();
+            Tournament tournament = _tournamentDbContext.Tournaments
+                .Where(to => to.TournamentId == id)
+                .Include(to => to.Games)
+                .ThenInclude(ga => ga.Teams)
+                .FirstOrDefault();
             if (tournament == null)
             {
                 return NotFound();
             }
 
-            gameViewModel.ActiveGame.Tournament = tournament;
-            gameViewModel.ActiveGame.TournamentId = tournament.TournamentId;
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _tournamentDbContext.Games.Add(gameViewModel.ActiveGame);
-                _tournamentDbContext.Teams.AddRange(gameViewModel.ActiveGame.Teams);
-                _tournamentDbContext.SaveChanges();
+                return View("Create", model);
+            }
 
-                return RedirectToAction("GetManageForm", "Tournament", new { id = tournament.TournamentId });
-            }
-            else
+            // Create a new game based on the view model.
+            Game game = new Game
             {
-                return View("Create", gameViewModel);
-            }
+                GameDateTime = model.GameDateTime,
+                TournamentId = tournament.TournamentId,
+                Tournament = tournament,
+                Teams = new System.Collections.Generic.List<Team>
+                {
+                    new Team { Name = model.Team1Name, TournamentId = tournament.TournamentId },
+                    new Team { Name = model.Team2Name, TournamentId = tournament.TournamentId }
+                }
+            };
+
+            _tournamentDbContext.Games.Add(game);
+            // Optionally the Teams collection will cascade; or if not, you can also add:
+            // _tournamentDbContext.Teams.AddRange(game.Teams);
+
+            _tournamentDbContext.SaveChanges();
+            return RedirectToAction("GetManageForm", "Tournament", new { id = tournament.TournamentId });
         }
 
         /// <summary>

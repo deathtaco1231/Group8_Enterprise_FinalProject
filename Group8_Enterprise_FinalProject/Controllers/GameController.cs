@@ -66,15 +66,18 @@ namespace Group8_Enterprise_FinalProject.Controllers
                 var team1Score = (scores.Length > 0) ? scores[0] : "0";
                 var team2Score = (scores.Length > 1) ? scores[1] : "0";
 
+                var firstTeam = game.Teams.FirstOrDefault();
+                var lastTeam = game.Teams.LastOrDefault();
+
                 EditGameViewModel gameViewModel = new EditGameViewModel()
                 {
                     GameId = game.GameId,
                     GameDateTime = game.GameDateTime,
-                    Team1Name = game.Teams.First().Name,
+                    Team1Name = firstTeam != null ? firstTeam.Name : "TBD",
                     Team1Score = team1Score,
-                    Team2Name = game.Teams.Last().Name,
+                    Team2Name = lastTeam != null ? lastTeam.Name : "TBD",
                     Team2Score = team2Score,
-                    TournamentId = game.TournamentId.Value           
+                    TournamentId = game.TournamentId.Value
                 };
 
                 return View("Edit", gameViewModel);

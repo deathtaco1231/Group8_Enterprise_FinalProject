@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Group8_Enterprise_FinalProject.Entities;
 using Group8_Enterprise_FinalProject.Messages;
@@ -24,7 +25,7 @@ namespace Group8_Enterprise_FinalProject.API_s
         }
 
         /// <summary>
-        /// API home route, providing base configuration and endpoint references.
+        /// API home route, providing base configuration and endpoint references (similar to PA3)
         /// </summary>
         [HttpGet("")]
         public IActionResult GetApiHome()
@@ -103,9 +104,9 @@ namespace Group8_Enterprise_FinalProject.API_s
         [HttpPost("tournaments/{tournamentId:int}/register")]
         public IActionResult RegisterPlayer(int tournamentId, [FromBody] TournamentRegistrationDTO regDto)
         {
-            if (regDto == null || string.IsNullOrWhiteSpace(regDto.Name) || string.IsNullOrWhiteSpace(regDto.Email))
+            if (regDto == null || string.IsNullOrWhiteSpace(regDto.Name) || string.IsNullOrWhiteSpace(regDto.Email) || !(regDto.Email.Contains('@') && regDto.Email.Contains('.')))
             {
-                return BadRequest("Name and email are required.");
+                return BadRequest("Name and valid email are required.");
             }
 
             var tournament = _tournamentDbContext.Tournaments.Find(tournamentId);
